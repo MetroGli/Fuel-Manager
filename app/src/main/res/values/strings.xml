@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Fuel Manager</string>
+
+    <!-- Login -->
+    <string name="login_title">Iniciar Sesión</string>
+    <string name="login_subtitle">Accede a la plataforma de combustibles</string>
+    <string name="hint_email">Correo electrónico</string>
+    <string name="hint_password">Contraseña</string>
+    <string name="btn_login">Ingresar</string>
+    <string name="no_account">¿No tienes cuenta? <b>Regístrate</b></string>
+
+    <!-- Register -->
+    <string name="register_title">Crear Cuenta</string>
+    <string name="register_subtitle">Únete a la plataforma nacional</string>
+    <string name="hint_name">Nombre completo</string>
+    <string name="hint_confirm_password">Confirmar contraseña</string>
+    <string name="label_role">Tipo de usuario</string>
+    <string name="btn_register">Crear cuenta</string>
+    <string name="have_account">¿Ya tienes cuenta? <b>Inicia sesión</b></string>
+
+    <!-- Dashboard -->
+    <string name="btn_logout">Cerrar sesión</string>
+
+    <!-- Splash -->
+    <string name="splash_tagline">Gestión inteligente de combustibles</string>
+</resources>

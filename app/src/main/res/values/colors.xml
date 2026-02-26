@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Primarios - Naranja combustible -->
+    <color name="primary">#E65100</color>
+    <color name="primary_dark">#BF360C</color>
+    <color name="primary_light">#FF8F00</color>
+
+    <!-- Secundarios -->
+    <color name="surface">#1A1A2E</color>
+    <color name="surface_card">#16213E</color>
+    <color name="surface_elevated">#0F3460</color>
+
+    <!-- Texto -->
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#B0BEC5</color>
+    <color name="text_hint">#78909C</color>
+
+    <!-- Inputs -->
+    <color name="input_background">#1E2A3A</color>
+    <color name="input_stroke">#2C3E50</color>
+    <color name="input_stroke_focused">#E65100</color>
+
+    <!-- Estado -->
+    <color name="error">#EF5350</color>
+    <color name="success">#66BB6A</color>
+    <color name="warning">#FFA726</color>
+
+    <!-- Fondos -->
+    <color name="bg_main">#0D1117</color>
+    <color name="bg_card">#161B22</color>
+
+    <!-- Splash / Marca -->
+    <color name="brand_gradient_start">#E65100</color>
+    <color name="brand_gradient_end">#BF360C</color>
+
+    <!-- Compatibilidad legacy -->
+    <color name="colorPrimary">#E65100</color>
+    <color name="colorPrimaryDark">#BF360C</color>
+    <color name="colorAccent">#FF8F00</color>
+</resources>
