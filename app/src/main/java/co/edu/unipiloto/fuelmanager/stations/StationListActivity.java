@@ -39,7 +39,7 @@ public class StationListActivity extends AppCompatActivity {
         spinnerZone  = findViewById(R.id.spinnerZone);
         tvCount      = findViewById(R.id.tvCount);
 
-        // Saludo con nombre del usuario
+
         SessionManager session = new SessionManager(this);
         TextView tvWelcome = findViewById(R.id.tvWelcome);
         tvWelcome.setText("Hola, " + session.getUserName());

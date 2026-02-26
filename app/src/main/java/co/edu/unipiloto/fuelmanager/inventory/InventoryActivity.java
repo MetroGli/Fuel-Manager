@@ -29,16 +29,16 @@ import co.edu.unipiloto.fuelmanager.utils.SessionManager;
 
 public class InventoryActivity extends AppCompatActivity {
 
-    // Stock cards
+
     private TextView tvStockCorriente, tvStockExtra, tvStockAcpm;
     private TextView tvAlertCorriente, tvAlertExtra, tvAlertAcpm;
 
-    // Formulario
+
     private Spinner spinnerFuel, spinnerMovType;
     private TextInputEditText etVolume, etNote;
     private MaterialButton btnEntrada, btnSalida, btnRegistrar;
 
-    // Lista
+
     private RecyclerView recyclerMovements;
     private InventoryMovAdapter adapter;
 
@@ -63,8 +63,7 @@ public class InventoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inventory);
 
-        // La estación se identifica con el ID del usuario logueado
-        // (en un sistema real cada usuario ESTACION tendría su station_id)
+
         SessionManager session = new SessionManager(this);
         stationId = session.getUserId();
 
@@ -109,7 +108,6 @@ public class InventoryActivity extends AppCompatActivity {
     }
 
     private void setupMovTypeToggle() {
-        // Por defecto: ENTRADA activo
         setMovType(InventoryMovement.TYPE_ENTRADA);
 
         btnEntrada.setOnClickListener(v -> setMovType(InventoryMovement.TYPE_ENTRADA));
@@ -151,7 +149,7 @@ public class InventoryActivity extends AppCompatActivity {
         tvStockExtra.setText(formatGal(stock.getExtraGal()));
         tvStockAcpm.setText(formatGal(stock.getAcpmGal()));
 
-        // Alertas de stock mínimo
+
         setAlert(tvAlertCorriente, stock.getCorrienteGal());
         setAlert(tvAlertExtra,     stock.getExtraGal());
         setAlert(tvAlertAcpm,      stock.getAcpmGal());
@@ -189,7 +187,7 @@ public class InventoryActivity extends AppCompatActivity {
             return;
         }
 
-        // Verificar que no se saque más de lo que hay
+
         if (selectedMovType.equals(InventoryMovement.TYPE_SALIDA)) {
             InventoryStock stock = repository.getCurrentStock(stationId);
             if (volume > stock.getStock(fuel)) {

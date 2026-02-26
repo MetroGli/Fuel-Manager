@@ -11,7 +11,7 @@ import co.edu.unipiloto.fuelmanager.data.model.User;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME    = "fuelmanager.db";
-    private static final int    DATABASE_VERSION = 3; // ← sube a 3
+    private static final int    DATABASE_VERSION = 3;
 
     // ── Tabla usuarios ───────────────────────────────────────
     public static final String TABLE_USERS          = "users";
@@ -100,7 +100,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    // ── Seeds ─────────────────────────────────────────────────
     private void insertDefaultAdmin(SQLiteDatabase db) {
         ContentValues v = new ContentValues();
         v.put(COL_NAME,       "Administrador");

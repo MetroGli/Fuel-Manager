@@ -28,13 +28,11 @@ public class ClientHome extends AppCompatActivity {
         sessionManager = new SessionManager(this);
         String role = sessionManager.getUserRole();
 
-        // Saludo
         TextView tvWelcome   = findViewById(R.id.tvWelcome);
         TextView tvRoleBadge = findViewById(R.id.tvRoleBadge);
         tvWelcome.setText("Hola, " + sessionManager.getUserName());
         tvRoleBadge.setText(getRoleLabel(role));
 
-        // ── HU-01: Consulta precios — siempre visible para CLIENTE ──
         CardView cardPrices = findViewById(R.id.cardPrices);
         if (role.equals(Roles.CLIENTE)) {
             cardPrices.setVisibility(View.VISIBLE);
@@ -44,7 +42,6 @@ public class ClientHome extends AppCompatActivity {
             cardPrices.setVisibility(View.GONE);
         }
 
-        // ── HU-07: Inventario — activo para ESTACION ──
         CardView cardInventory       = findViewById(R.id.cardInventory);
         TextView tvInventoryBadge    = findViewById(R.id.tvInventoryBadge);
         if (role.equals(Roles.ESTACION)) {
@@ -53,19 +50,11 @@ public class ClientHome extends AppCompatActivity {
             cardInventory.setOnClickListener(v ->
                     startActivity(new Intent(this, InventoryActivity.class)));
         } else if (role.equals(Roles.ADMIN)) {
-            // Admin puede verlo también
             cardInventory.setAlpha(1.0f);
             tvInventoryBadge.setVisibility(View.GONE);
             cardInventory.setOnClickListener(v ->
                     startActivity(new Intent(this, InventoryActivity.class)));
         }
-        // Otros roles: queda opaco con badge "Próximo"
-
-        // ── HU-03: Ventas — próximo ──
-        // (sin acción aún)
-
-        // ── HU-08: Precios por zona — próximo ──
-        // (sin acción aún)
 
         // Logout
         findViewById(R.id.btnLogout).setOnClickListener(v -> confirmLogout());

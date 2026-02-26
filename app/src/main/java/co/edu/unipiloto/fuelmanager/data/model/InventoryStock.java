@@ -24,7 +24,7 @@ public class InventoryStock {
     public double getAcpmGal()                   { return acpmGal; }
     public void   setAcpmGal(double v)           { this.acpmGal = v; }
 
-    /** Retorna el stock del combustible indicado. */
+
     public double getStock(String fuelType) {
         switch (fuelType) {
             case InventoryMovement.FUEL_EXTRA:     return extraGal;

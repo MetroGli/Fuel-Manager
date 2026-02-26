@@ -20,7 +20,7 @@ public class InventoryRepository {
         db = DatabaseHelper.getInstance(context);
     }
 
-    /** Inserta un movimiento y retorna el ID generado (−1 si falla). */
+
     public long insertMovement(InventoryMovement mov) {
         SQLiteDatabase database = db.getWritableDatabase();
         ContentValues v = new ContentValues();
@@ -35,7 +35,7 @@ public class InventoryRepository {
         return id;
     }
 
-    /** Retorna todos los movimientos de una estación, más reciente primero. */
+
     public List<InventoryMovement> getMovements(int stationId) {
         SQLiteDatabase database = db.getReadableDatabase();
         List<InventoryMovement> list = new ArrayList<>();
@@ -54,10 +54,6 @@ public class InventoryRepository {
         return list;
     }
 
-    /**
-     * Calcula el stock actual sumando entradas y restando salidas
-     * para cada tipo de combustible.
-     */
     public InventoryStock getCurrentStock(int stationId) {
         SQLiteDatabase database = db.getReadableDatabase();
         double corriente = calcStock(database, stationId, InventoryMovement.FUEL_CORRIENTE);

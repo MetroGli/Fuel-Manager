@@ -36,7 +36,7 @@ public class InventoryMovAdapter extends RecyclerView.Adapter<InventoryMovAdapte
 
         boolean isEntrada = m.getMovType().equals(InventoryMovement.TYPE_ENTRADA);
 
-        // Ícono y color según tipo
+
         h.tvMovType.setText(isEntrada ? "▲ ENTRADA" : "▼ SALIDA");
         h.tvMovType.setTextColor(isEntrada ? 0xFF66BB6A : 0xFFEF5350);
         h.tvMovType.setBackgroundResource(isEntrada
@@ -45,7 +45,7 @@ public class InventoryMovAdapter extends RecyclerView.Adapter<InventoryMovAdapte
         h.tvFuelType.setText(m.getFuelType());
         h.tvVolume.setText(String.format(Locale.getDefault(), "%.1f gal", m.getVolumeGal()));
 
-        // Fecha abreviada (primeras 16 letras)
+
         String date = m.getDate();
         h.tvDate.setText(date.length() > 24 ? date.substring(0, 24) : date);
 
