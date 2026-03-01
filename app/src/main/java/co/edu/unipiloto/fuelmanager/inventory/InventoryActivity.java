@@ -3,7 +3,6 @@ package co.edu.unipiloto.fuelmanager.inventory;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -25,11 +24,18 @@ import java.util.Locale;
 import co.edu.unipiloto.fuelmanager.R;
 import co.edu.unipiloto.fuelmanager.data.model.InventoryMovement;
 import co.edu.unipiloto.fuelmanager.data.model.InventoryStock;
+import co.edu.unipiloto.fuelmanager.data.model.NormativePrice;
 import co.edu.unipiloto.fuelmanager.utils.SessionManager;
+
+import co.edu.unipiloto.fuelmanager.data.repository.NormativePriceRepository;
+import android.content.Intent;
+import co.edu.unipiloto.fuelmanager.normative.NormativePriceActivity;
 
 public class InventoryActivity extends AppCompatActivity {
 
 
+    private MaterialButton btnActualizarPrecios;
+    private NormativePriceRepository normativeRepo;
     private TextView tvStockCorriente, tvStockExtra, tvStockAcpm;
     private TextView tvAlertCorriente, tvAlertExtra, tvAlertAcpm;
 
@@ -77,6 +83,9 @@ public class InventoryActivity extends AppCompatActivity {
 
         btnRegistrar.setOnClickListener(v -> registrarMovimiento());
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
+
+        findViewById(R.id.btnIrAPrecios).setOnClickListener(v ->
+                startActivity(new Intent(this, NormativePriceActivity.class)));
     }
 
     private void bindViews() {
@@ -94,6 +103,8 @@ public class InventoryActivity extends AppCompatActivity {
         btnSalida         = findViewById(R.id.btnTypeSalida);
         btnRegistrar      = findViewById(R.id.btnRegistrar);
         recyclerMovements = findViewById(R.id.recyclerMovements);
+        normativeRepo = new NormativePriceRepository(this);
+
     }
 
     private void setupSpinners() {
@@ -223,4 +234,5 @@ public class InventoryActivity extends AppCompatActivity {
     private String formatGal(double gal) {
         return String.format(Locale.getDefault(), "%.1f gal", gal);
     }
+
 }

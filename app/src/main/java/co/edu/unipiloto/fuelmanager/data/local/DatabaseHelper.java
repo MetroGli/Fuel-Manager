@@ -11,7 +11,7 @@ import co.edu.unipiloto.fuelmanager.data.model.User;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME    = "fuelmanager.db";
-    private static final int    DATABASE_VERSION = 3;
+    private static final int    DATABASE_VERSION = 4;
 
     // ── Tabla usuarios ───────────────────────────────────────
     public static final String TABLE_USERS          = "users";
@@ -39,6 +39,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_INV_NOTE         = "note";
     public static final String COL_INV_DATE         = "mov_date";
     public static final String COL_INV_STATION_ID   = "station_id";
+
+    // ── Tabla precios normativos ─────────────────────────────
+    public static final String TABLE_NORMATIVE_PRICES = "normative_prices";
+    public static final String COL_NP_FUEL_TYPE       = "fuel_type";
+    public static final String COL_NP_PRICE           = "price_per_gallon";
+    public static final String COL_NP_CITY            = "city";
+    public static final String COL_NP_DATE            = "effective_date";
+    public static final String COL_NORM_SOURCE = "source";
 
     // ── CREATE statements ────────────────────────────────────
     private static final String CREATE_USERS =
@@ -70,6 +78,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     COL_INV_DATE        + " TEXT NOT NULL, " +
                     COL_INV_STATION_ID  + " INTEGER NOT NULL);";
 
+    //tabla precios normativos
+    private static final String CREATE_NORMATIVE_PRICES =
+            "CREATE TABLE " + TABLE_NORMATIVE_PRICES + " (" +
+                    COL_ID            + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    COL_NP_FUEL_TYPE  + " TEXT NOT NULL, " +
+                    COL_NP_PRICE      + " REAL NOT NULL, " +
+                    COL_NP_CITY       + " TEXT NOT NULL, " +
+                    COL_NP_DATE       + " TEXT NOT NULL, " +
+                    COL_NORM_SOURCE   + " TEXT" +
+                    ");";
+
     // ── Singleton ────────────────────────────────────────────
     private static DatabaseHelper instance;
 
@@ -88,12 +107,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_USERS);
         db.execSQL(CREATE_STATIONS);
         db.execSQL(CREATE_INVENTORY);
+        db.execSQL(CREATE_NORMATIVE_PRICES); //nueva linea precios normativos
         insertDefaultAdmin(db);
         insertSeedStations(db);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NORMATIVE_PRICES); //drop precios normativos
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_INVENTORY);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_STATIONS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
@@ -184,5 +205,52 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 c.getString(c.getColumnIndexOrThrow(COL_PASSWORD)),
                 c.getString(c.getColumnIndexOrThrow(COL_ROLE))
         );
+    }
+//insertar precios normativos
+public long insertNormativePrice(co.edu.unipiloto.fuelmanager.data.model.NormativePrice price) {
+    SQLiteDatabase db = getWritableDatabase();
+
+    ContentValues values = new ContentValues();
+    values.put(COL_NP_FUEL_TYPE, price.getFuelType());
+    values.put(COL_NP_PRICE, price.getPricePerGallon());
+    values.put(COL_NP_CITY, "BOGOTA"); // temporal si no tienes city en modelo
+    values.put(COL_NP_DATE, price.getEffectiveDate());
+    values.put(COL_NORM_SOURCE, price.getSource());
+
+    return db.insert(TABLE_NORMATIVE_PRICES, null, values);
+}
+//obtener precios normativos
+public java.util.List<co.edu.unipiloto.fuelmanager.data.model.NormativePrice> getNormativePrices() {
+    java.util.List<co.edu.unipiloto.fuelmanager.data.model.NormativePrice> list =
+            new java.util.ArrayList<>();
+
+    SQLiteDatabase db = getReadableDatabase();
+    Cursor cursor = db.rawQuery(
+            "SELECT * FROM " + TABLE_NORMATIVE_PRICES + " ORDER BY fuel_type",
+            null
+    );
+
+    if (cursor.moveToFirst()) {
+        do {
+            co.edu.unipiloto.fuelmanager.data.model.NormativePrice p =
+                    new co.edu.unipiloto.fuelmanager.data.model.NormativePrice();
+
+            p.setId(cursor.getInt(cursor.getColumnIndexOrThrow(COL_ID)));
+            p.setFuelType(cursor.getString(cursor.getColumnIndexOrThrow(COL_NP_FUEL_TYPE)));
+            p.setPricePerGallon(cursor.getDouble(cursor.getColumnIndexOrThrow(COL_NP_PRICE))); // ✅ FIX
+            p.setEffectiveDate(cursor.getString(cursor.getColumnIndexOrThrow(COL_NP_DATE))); // ✅ FIX
+            p.setSource(cursor.getString(cursor.getColumnIndexOrThrow(COL_NORM_SOURCE)));
+
+            list.add(p);
+        } while (cursor.moveToNext());
+    }
+
+    cursor.close();
+    return list;
+}
+//limpiar precios normativos
+    public void clearNormativePrices() {
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(TABLE_NORMATIVE_PRICES, null, null);
     }
 }
