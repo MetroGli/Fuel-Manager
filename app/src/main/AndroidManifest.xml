@@ -3,7 +3,6 @@
     package="co.edu.unipiloto.fuelmanager">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -12,50 +11,60 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FuelManager">
-        <activity
-            android:name=".normative.NormativePriceActivity"
-            android:exported="false"/>
-        <!-- Splash / Router -->
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity> <!-- Auth -->
+        </activity>
 
         <activity
             android:name=".auth.LoginActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
+
         <activity
             android:name=".auth.RegisterActivity"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize" /> <!-- Admin -->
+            android:windowSoftInputMode="adjustResize" />
+
         <activity
             android:name=".admin.AdminDashBoard"
             android:exported="false"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".stations.StationListActivity"
-            android:exported="false"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".inventory.InventoryActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize" /> <!-- Cliente -->
+
         <activity
             android:name=".clients.ClientHome"
             android:exported="false"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".stations.StationListActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".inventory.InventoryActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".sales.SalesActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".normative.NormativePriceActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
 
     </application>
-
 </manifest>

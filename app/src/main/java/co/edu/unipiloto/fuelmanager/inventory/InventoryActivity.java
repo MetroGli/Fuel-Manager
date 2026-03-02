@@ -24,10 +24,9 @@ import java.util.Locale;
 import co.edu.unipiloto.fuelmanager.R;
 import co.edu.unipiloto.fuelmanager.data.model.InventoryMovement;
 import co.edu.unipiloto.fuelmanager.data.model.InventoryStock;
-import co.edu.unipiloto.fuelmanager.data.model.NormativePrice;
 import co.edu.unipiloto.fuelmanager.utils.SessionManager;
 
-import co.edu.unipiloto.fuelmanager.data.repository.NormativePriceRepository;
+import co.edu.unipiloto.fuelmanager.normative.NormativePriceRepository;
 import android.content.Intent;
 import co.edu.unipiloto.fuelmanager.normative.NormativePriceActivity;
 

@@ -1,95 +1,136 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#0D0D0D"
-    android:paddingStart="20dp"
-    android:paddingEnd="20dp"
-    android:paddingTop="24dp"
-    android:paddingBottom="20dp">
+    android:background="#0D1117">
 
-    <!-- Header -->
-    <TextView
+    <!-- HEADER -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="GESTIÓN DE PRECIOS"
-        android:textColor="#FF6B00"
-        android:textSize="11sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="6dp" />
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="20dp"
+        android:background="@drawable/bg_header_gradient">
 
-    <View
-        android:layout_width="40dp"
-        android:layout_height="2dp"
-        android:background="#FF6B00"
-        android:layout_marginBottom="20dp" />
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:src="@drawable/ic_arrow_back"
+            android:background="@drawable/bg_icon_btn"
+            android:tint="#FFFFFF"
+            android:contentDescription="Volver"/>
 
-    <!-- Cabecera tabla -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:layout_marginStart="14dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Precios Normativos"
+                android:textSize="20sp"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Referencia MINMINAS · Bogotá"
+                android:textSize="12sp"
+                android:textColor="#B0BEC5"/>
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_price_zone"
+            android:tint="#42A5F5"/>
+    </LinearLayout>
+
+    <!-- CABECERA TABLA -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:orientation="horizontal"
-        android:background="#1A1A1A"
-        android:paddingStart="12dp"
-        android:paddingEnd="12dp"
-        android:gravity="center_vertical">
+        android:background="#161B22"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:gravity="center_vertical"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:text="TIPO DE COMBUSTIBLE"
-            android:textColor="#FF6B00"
-            android:textSize="10sp"
-            android:textStyle="bold" />
+            android:text="Combustible"
+            android:textColor="#B0BEC5"
+            android:textSize="11sp"
+            android:textAllCaps="true"
+            android:letterSpacing="0.06"/>
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="PRECIO"
-            android:textColor="#FF6B00"
-            android:textSize="10sp"
-            android:gravity="end"
-            android:textStyle="bold" />
+            android:layout_weight="2"
+            android:text="Precio normat."
+            android:textColor="#B0BEC5"
+            android:textSize="11sp"
+            android:textAllCaps="true"
+            android:letterSpacing="0.06"
+            android:gravity="center"/>
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="DISPONIBLE"
-            android:textColor="#FF6B00"
-            android:textSize="10sp"
-            android:gravity="end"
-            android:textStyle="bold" />
+            android:layout_weight="2"
+            android:text="Fuente"
+            android:textColor="#B0BEC5"
+            android:textSize="11sp"
+            android:textAllCaps="true"
+            android:letterSpacing="0.06"
+            android:gravity="end"/>
     </LinearLayout>
 
+    <!-- Divisor -->
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#FF6B00"
+        android:background="#E65100"
         android:alpha="0.4"
-        android:layout_marginBottom="4dp" />
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"/>
 
-    <!-- RecyclerView -->
+    <!-- LISTA -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerNormative"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:paddingBottom="8dp" />
+        android:paddingTop="4dp"
+        android:paddingBottom="8dp"
+        android:clipToPadding="false"/>
 
-    <!-- Botón -->
-    <Button
+    <!-- BOTÓN ACTUALIZAR -->
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btnActualizarPrecios"
         android:layout_width="match_parent"
         android:layout_height="52dp"
         android:text="Actualizar precios normativos"
-        android:textColor="#0D0D0D"
+        android:textAllCaps="false"
+        android:textSize="15sp"
         android:textStyle="bold"
-        android:backgroundTint="#FF6B00"
-        android:layout_marginTop="12dp" />
+        app:cornerRadius="12dp"
+        app:backgroundTint="#E65100"
+        android:layout_margin="16dp"/>
 
 </LinearLayout>

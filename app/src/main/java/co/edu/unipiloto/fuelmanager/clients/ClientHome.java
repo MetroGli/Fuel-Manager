@@ -12,52 +12,78 @@ import androidx.cardview.widget.CardView;
 import co.edu.unipiloto.fuelmanager.R;
 import co.edu.unipiloto.fuelmanager.auth.LoginActivity;
 import co.edu.unipiloto.fuelmanager.inventory.InventoryActivity;
+import co.edu.unipiloto.fuelmanager.normative.NormativePriceActivity;
+import co.edu.unipiloto.fuelmanager.sales.SalesActivity;
 import co.edu.unipiloto.fuelmanager.stations.StationListActivity;
 import co.edu.unipiloto.fuelmanager.utils.Roles;
 import co.edu.unipiloto.fuelmanager.utils.SessionManager;
 
 public class ClientHome extends AppCompatActivity {
 
-    private SessionManager sessionManager;
+    private SessionManager session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_client_home);
 
-        sessionManager = new SessionManager(this);
-        String role = sessionManager.getUserRole();
+        session = new SessionManager(this);
+        String role = session.getUserRole();
 
         TextView tvWelcome   = findViewById(R.id.tvWelcome);
         TextView tvRoleBadge = findViewById(R.id.tvRoleBadge);
-        tvWelcome.setText("Hola, " + sessionManager.getUserName());
+        tvWelcome.setText("Hola, " + session.getUserName());
         tvRoleBadge.setText(getRoleLabel(role));
 
+        setupCards(role);
+
+        findViewById(R.id.btnLogout).setOnClickListener(v -> confirmLogout());
+    }
+
+    private void setupCards(String role) {
+
+        // ── HU-01: Consulta precios — solo CLIENTE ──────────────
         CardView cardPrices = findViewById(R.id.cardPrices);
         if (role.equals(Roles.CLIENTE)) {
-            cardPrices.setVisibility(View.VISIBLE);
+            activate(cardPrices, null);
             cardPrices.setOnClickListener(v ->
                     startActivity(new Intent(this, StationListActivity.class)));
         } else {
             cardPrices.setVisibility(View.GONE);
         }
 
-        CardView cardInventory       = findViewById(R.id.cardInventory);
-        TextView tvInventoryBadge    = findViewById(R.id.tvInventoryBadge);
-        if (role.equals(Roles.ESTACION)) {
-            cardInventory.setAlpha(1.0f);
-            tvInventoryBadge.setVisibility(View.GONE);
-            cardInventory.setOnClickListener(v ->
-                    startActivity(new Intent(this, InventoryActivity.class)));
-        } else if (role.equals(Roles.ADMIN)) {
-            cardInventory.setAlpha(1.0f);
-            tvInventoryBadge.setVisibility(View.GONE);
+        // ── HU-07: Inventario — ESTACION y ADMIN ────────────────
+        CardView cardInventory    = findViewById(R.id.cardInventory);
+        TextView tvInventoryBadge = findViewById(R.id.tvInventoryBadge);
+        if (role.equals(Roles.ESTACION) || role.equals(Roles.ADMIN)) {
+            activate(cardInventory, tvInventoryBadge);
             cardInventory.setOnClickListener(v ->
                     startActivity(new Intent(this, InventoryActivity.class)));
         }
 
-        // Logout
-        findViewById(R.id.btnLogout).setOnClickListener(v -> confirmLogout());
+        // ── HU-03: Ventas — ESTACION y ADMIN ────────────────────
+        CardView cardSales    = findViewById(R.id.cardSales);
+        TextView tvSalesBadge = findViewById(R.id.tvSalesBadge);
+        if (role.equals(Roles.ESTACION) || role.equals(Roles.ADMIN)) {
+            activate(cardSales, tvSalesBadge);
+            cardSales.setOnClickListener(v ->
+                    startActivity(new Intent(this, SalesActivity.class)));
+        }
+
+        // ── HU-08: Precios normativos — solo ADMIN ───────────────
+        CardView cardNormative    = findViewById(R.id.cardNormative);
+        TextView tvNormativeBadge = findViewById(R.id.tvNormativeBadge);
+        if (role.equals(Roles.ADMIN)) {
+            activate(cardNormative, tvNormativeBadge);
+            cardNormative.setOnClickListener(v ->
+                    startActivity(new Intent(this, NormativePriceActivity.class)));
+        }
+    }
+
+    /** Activa una card: quita opacidad y oculta el badge "Próximo". */
+    private void activate(CardView card, TextView badge) {
+        card.setAlpha(1.0f);
+        if (badge != null) badge.setVisibility(View.GONE);
     }
 
     private String getRoleLabel(String role) {
@@ -75,10 +101,10 @@ public class ClientHome extends AppCompatActivity {
                 .setTitle("Cerrar sesión")
                 .setMessage("¿Deseas salir de la aplicación?")
                 .setPositiveButton("Salir", (d, w) -> {
-                    sessionManager.clearSession();
-                    Intent intent = new Intent(this, LoginActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
+                    session.clearSession();
+                    Intent i = new Intent(this, LoginActivity.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(i);
                 })
                 .setNegativeButton("Cancelar", null)
                 .show();
