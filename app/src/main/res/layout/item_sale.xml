@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp"
+    app:cardBackgroundColor="#161B22"
+    app:cardCornerRadius="14dp"
+    app:cardElevation="2dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:gravity="center_vertical">
+
+        <!-- Ícono combustible -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            app:cardCornerRadius="12dp"
+            app:cardBackgroundColor="#1AE65100">
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:src="@drawable/ic_fuel_drop"
+                android:layout_gravity="center"
+                android:tint="#E65100"/>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Detalle central -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:layout_marginStart="12dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/tvSaleFuel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Corriente"
+                    android:textSize="14sp"
+                    android:textColor="#E65100"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/tvSaleVolume"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="· 10.0 gal"
+                    android:textSize="13sp"
+                    android:textColor="#B0BEC5"
+                    android:layout_marginStart="6dp"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvSalePlate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🚗 ABC123"
+                android:textSize="11sp"
+                android:textColor="#78909C"
+                android:layout_marginTop="2dp"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/tvSaleDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fecha"
+                android:textSize="10sp"
+                android:textColor="#546E7A"
+                android:layout_marginTop="2dp"/>
+        </LinearLayout>
+
+        <!-- Total -->
+        <TextView
+            android:id="@+id/tvSaleTotal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="$95.000"
+            android:textSize="15sp"
+            android:textColor="#66BB6A"
+            android:textStyle="bold"/>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
