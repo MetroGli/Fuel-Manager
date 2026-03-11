@@ -56,6 +56,11 @@
             android:windowSoftInputMode="adjustResize" />
 
         <activity
+            android:name=".alerts.AlertsActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+
+        <activity
             android:name=".sales.SalesActivity"
             android:exported="false"
             android:screenOrientation="portrait"

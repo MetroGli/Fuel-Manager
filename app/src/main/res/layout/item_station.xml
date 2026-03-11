@@ -47,6 +47,22 @@
                 android:textColor="#FFFFFF"
                 android:textStyle="bold"/>
 
+            <!-- Badge mejor precio — visible solo en posición #1 -->
+            <TextView
+                android:id="@+id/badgeBestPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🏆 Mejor precio"
+                android:textSize="10sp"
+                android:textColor="#E65100"
+                android:background="@drawable/badge_best_price"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"
+                android:layout_marginTop="4dp"
+                android:visibility="gone"/>
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
