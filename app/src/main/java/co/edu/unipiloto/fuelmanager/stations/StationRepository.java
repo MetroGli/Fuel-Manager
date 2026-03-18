@@ -19,20 +19,28 @@ public class StationRepository {
         db = DatabaseHelper.getInstance(context);
     }
 
+    /**
+     * Método principal usado por StationListActivity (HU-01 + HU-02).
+     * Si zone es "Todas" o null devuelve todas las estaciones ordenadas por precio corriente ASC.
+     */
+    public List<Station> getStationsSortedByPrice(String zone) {
+        if (zone == null || zone.equals("Todas")) {
+            return getAllOrderedByPrice();
+        } else {
+            return getByZone(zone);
+        }
+    }
+
     public List<Station> getAllOrderedByPrice() {
         SQLiteDatabase database = db.getReadableDatabase();
         List<Station> list = new ArrayList<>();
-
         Cursor cursor = database.query(
                 DatabaseHelper.TABLE_STATIONS,
                 null, null, null, null, null,
                 DatabaseHelper.COL_PRICE_CORRIENTE + " ASC"
         );
-
         if (cursor != null) {
-            while (cursor.moveToNext()) {
-                list.add(cursorToStation(cursor));
-            }
+            while (cursor.moveToNext()) list.add(cursorToStation(cursor));
             cursor.close();
         }
         database.close();
@@ -42,7 +50,6 @@ public class StationRepository {
     public List<Station> getByZone(String zone) {
         SQLiteDatabase database = db.getReadableDatabase();
         List<Station> list = new ArrayList<>();
-
         Cursor cursor = database.query(
                 DatabaseHelper.TABLE_STATIONS,
                 null,
@@ -51,11 +58,8 @@ public class StationRepository {
                 null, null,
                 DatabaseHelper.COL_PRICE_CORRIENTE + " ASC"
         );
-
         if (cursor != null) {
-            while (cursor.moveToNext()) {
-                list.add(cursorToStation(cursor));
-            }
+            while (cursor.moveToNext()) list.add(cursorToStation(cursor));
             cursor.close();
         }
         database.close();
