@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp"
+    app:cardBackgroundColor="#161B22"
+    app:cardCornerRadius="14dp"
+    app:cardElevation="2dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:gravity="center_vertical">
+
+        <!-- Icono -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            app:cardCornerRadius="12dp"
+            app:cardBackgroundColor="#1A42A5F5">
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:src="@drawable/ic_inventory"
+                android:layout_gravity="center"
+                android:tint="#42A5F5"/>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Info -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:layout_marginStart="12dp">
+
+            <TextView
+                android:id="@+id/tvDeliveryStation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Terpel Bosa"
+                android:textSize="14sp"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/tvDeliveryFuel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🟠 Corriente"
+                android:textSize="12sp"
+                android:textColor="#E65100"
+                android:layout_marginTop="2dp"/>
+
+            <TextView
+                android:id="@+id/tvDeliveryNotes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="11sp"
+                android:textColor="#78909C"
+                android:layout_marginTop="2dp"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/tvDeliveryDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="10sp"
+                android:textColor="#546E7A"
+                android:layout_marginTop="2dp"/>
+        </LinearLayout>
+
+        <!-- Volumen -->
+        <TextView
+            android:id="@+id/tvDeliveryVolume"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="500 gal"
+            android:textSize="15sp"
+            android:textColor="#42A5F5"
+            android:textStyle="bold"/>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

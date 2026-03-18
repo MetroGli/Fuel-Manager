@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.util.ArrayList;
 import java.util.List;
 
+import co.edu.unipiloto.fuelmanager.data.model.Delivery;
 import co.edu.unipiloto.fuelmanager.data.model.FuelSale;
 import co.edu.unipiloto.fuelmanager.data.model.NormativePrice;
 import co.edu.unipiloto.fuelmanager.data.model.PriceAlert;
@@ -17,7 +18,7 @@ import co.edu.unipiloto.fuelmanager.data.model.User;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME    = "fuelmanager.db";
-    private static final int    DATABASE_VERSION = 6; // ← sube a 6
+    private static final int    DATABASE_VERSION = 7; // ← sube a 7
 
     // ── Tabla usuarios ──────────────────────────────────────
     public static final String TABLE_USERS           = "users";
@@ -64,7 +65,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_SALE_DATE          = "sale_date";
     public static final String COL_SALE_STATION_ID    = "station_id";
 
-    // ── Tabla alertas de precio ─────────────────────────────
+    // ── Tabla alertas ───────────────────────────────────────
     public static final String TABLE_ALERTS           = "price_alerts";
     public static final String COL_AL_STATION_ID      = "station_id";
     public static final String COL_AL_STATION_NAME    = "station_name";
@@ -72,6 +73,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_AL_LAST_PRICE      = "last_known_price";
     public static final String COL_AL_ACTIVE          = "active";
     public static final String COL_AL_USER_ID         = "user_id";
+
+    // ── Tabla entregas distribuidor ─────────────────────────
+    public static final String TABLE_DELIVERIES       = "deliveries";
+    public static final String COL_DL_STATION_ID      = "station_id";
+    public static final String COL_DL_STATION_NAME    = "station_name";
+    public static final String COL_DL_FUEL_TYPE       = "fuel_type";
+    public static final String COL_DL_VOLUME          = "volume_gal";
+    public static final String COL_DL_DATE            = "delivery_date";
+    public static final String COL_DL_NOTES           = "notes";
+    public static final String COL_DL_DISTRIBUTOR_ID  = "distributor_id";
 
     // ── CREATE statements ───────────────────────────────────
     private static final String CREATE_USERS =
@@ -134,6 +145,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     COL_AL_USER_ID + " INTEGER NOT NULL, " +
                     "UNIQUE(" + COL_AL_STATION_ID + ", " + COL_AL_FUEL_TYPE + ", " + COL_AL_USER_ID + "));";
 
+    private static final String CREATE_DELIVERIES =
+            "CREATE TABLE " + TABLE_DELIVERIES + " (" +
+                    COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    COL_DL_STATION_ID + " INTEGER NOT NULL, " +
+                    COL_DL_STATION_NAME + " TEXT NOT NULL, " +
+                    COL_DL_FUEL_TYPE + " TEXT NOT NULL, " +
+                    COL_DL_VOLUME + " REAL NOT NULL, " +
+                    COL_DL_DATE + " TEXT NOT NULL, " +
+                    COL_DL_NOTES + " TEXT, " +
+                    COL_DL_DISTRIBUTOR_ID + " INTEGER NOT NULL);";
+
     // ── Singleton ───────────────────────────────────────────
     private static DatabaseHelper instance;
 
@@ -155,12 +177,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_NORMATIVE_PRICES);
         db.execSQL(CREATE_SALES);
         db.execSQL(CREATE_ALERTS);
+        db.execSQL(CREATE_DELIVERIES);
         insertDefaultAdmin(db);
         insertSeedStations(db);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_DELIVERIES);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_ALERTS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_SALES);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NORMATIVE_PRICES);
@@ -255,6 +279,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 c.getString(c.getColumnIndexOrThrow(COL_PASSWORD)),
                 c.getString(c.getColumnIndexOrThrow(COL_ROLE))
         );
+    }
+
+    // ── CRUD Estaciones ────────────────────────────────────
+    public List<String[]> getAllStationsSimple() {
+        List<String[]> list = new ArrayList<>();
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.query(TABLE_STATIONS,
+                new String[]{COL_ID, COL_ST_NAME, COL_ADDRESS},
+                null, null, null, null, COL_ST_NAME + " ASC");
+        if (c != null) {
+            while (c.moveToNext()) {
+                list.add(new String[]{
+                        String.valueOf(c.getInt(0)),
+                        c.getString(1),
+                        c.getString(2)
+                });
+            }
+            c.close();
+        }
+        db.close();
+        return list;
     }
 
     // ── CRUD Precios Normativos ────────────────────────────
@@ -356,10 +401,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     // ── CRUD Alertas ──────────────────────────────────────
-    /**
-     * Activa una alerta. Si ya existe (misma estación + combustible + usuario),
-     * la reactiva y actualiza el precio de referencia.
-     */
     public long upsertAlert(PriceAlert alert) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues v = new ContentValues();
@@ -369,14 +410,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         v.put(COL_AL_LAST_PRICE,   alert.getLastKnownPrice());
         v.put(COL_AL_ACTIVE,       1);
         v.put(COL_AL_USER_ID,      alert.getUserId());
-        // INSERT OR REPLACE aprovecha el UNIQUE constraint
         long id = db.insertWithOnConflict(TABLE_ALERTS, null, v,
                 SQLiteDatabase.CONFLICT_REPLACE);
         db.close();
         return id;
     }
 
-    /** Desactiva una alerta específica. */
     public void deactivateAlert(int stationId, String fuelType, int userId) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues v = new ContentValues();
@@ -387,7 +426,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    /** Verifica si una alerta está activa para una estación+combustible+usuario. */
     public boolean isAlertActive(int stationId, String fuelType, int userId) {
         SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.query(TABLE_ALERTS, new String[]{COL_AL_ACTIVE},
@@ -401,7 +439,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return active;
     }
 
-    /** Retorna todas las alertas activas de un usuario. */
     public List<PriceAlert> getActiveAlerts(int userId) {
         List<PriceAlert> list = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
@@ -417,15 +454,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return list;
     }
 
-    /**
-     * Compara el precio actual de cada estación vigilada contra el precio
-     * guardado. Retorna las alertas cuyo precio cambió.
-     */
     public List<PriceAlert> checkPriceChanges(int userId) {
         List<PriceAlert> changed = new ArrayList<>();
         List<PriceAlert> active  = getActiveAlerts(userId);
         SQLiteDatabase db = getReadableDatabase();
-
         for (PriceAlert alert : active) {
             String priceCol;
             switch (alert.getFuelType()) {
@@ -433,25 +465,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 case "ACPM":  priceCol = COL_PRICE_ACPM;      break;
                 default:      priceCol = COL_PRICE_CORRIENTE; break;
             }
-
-            Cursor c = db.query(TABLE_STATIONS,
-                    new String[]{priceCol},
+            Cursor c = db.query(TABLE_STATIONS, new String[]{priceCol},
                     COL_ID + "=?",
                     new String[]{String.valueOf(alert.getStationId())},
                     null, null, null);
-
             if (c != null && c.moveToFirst()) {
                 double currentPrice = c.getDouble(0);
                 if (currentPrice != alert.getLastKnownPrice()) {
-                    alert.setLastKnownPrice(currentPrice); // precio nuevo
+                    alert.setLastKnownPrice(currentPrice);
                     changed.add(alert);
                 }
                 c.close();
             }
         }
         db.close();
-
-        // Actualizar last_known_price para las que cambiaron
         for (PriceAlert a : changed) {
             SQLiteDatabase wdb = getWritableDatabase();
             ContentValues v = new ContentValues();
@@ -461,22 +488,71 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     new String[]{String.valueOf(a.getStationId()), a.getFuelType(), String.valueOf(a.getUserId())});
             wdb.close();
         }
-
         return changed;
     }
 
-    /** Actualiza precios de una estación y dispara revisión de alertas. */
-    public boolean updateStationPrices(int stationId, double corriente,
-                                       double extra, double acpm) {
+    // ── CRUD Entregas ─────────────────────────────────────
+    /**
+     * Registra la entrega y automáticamente crea una ENTRADA
+     * en el inventario de la estación destino.
+     */
+    public long insertDelivery(Delivery delivery) {
+        String now = delivery.getDate();
+
+        // 1. Guardar la entrega en tabla deliveries
         SQLiteDatabase db = getWritableDatabase();
         ContentValues v = new ContentValues();
-        v.put(COL_PRICE_CORRIENTE, corriente);
-        v.put(COL_PRICE_EXTRA,     extra);
-        v.put(COL_PRICE_ACPM,      acpm);
-        int rows = db.update(TABLE_STATIONS, v,
-                COL_ID + "=?", new String[]{String.valueOf(stationId)});
+        v.put(COL_DL_STATION_ID,     delivery.getStationId());
+        v.put(COL_DL_STATION_NAME,   delivery.getStationName());
+        v.put(COL_DL_FUEL_TYPE,      delivery.getFuelType());
+        v.put(COL_DL_VOLUME,         delivery.getVolumeGal());
+        v.put(COL_DL_DATE,           now);
+        v.put(COL_DL_NOTES,          delivery.getNotes());
+        v.put(COL_DL_DISTRIBUTOR_ID, delivery.getDistributorId());
+        long deliveryId = db.insert(TABLE_DELIVERIES, null, v);
         db.close();
-        return rows > 0;
+
+        // 2. Crear ENTRADA en inventario de la estación
+        String note = "Entrega #" + deliveryId + " · Distribuidor";
+        if (delivery.getNotes() != null && !delivery.getNotes().isEmpty())
+            note += " · " + delivery.getNotes();
+
+        insertInventoryMovement(
+                delivery.getFuelType(),
+                "ENTRADA",
+                delivery.getVolumeGal(),
+                note,
+                now,
+                delivery.getStationId()
+        );
+
+        return deliveryId;
+    }
+
+    public List<Delivery> getDeliveries(int distributorId) {
+        List<Delivery> list = new ArrayList<>();
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.query(TABLE_DELIVERIES, null,
+                COL_DL_DISTRIBUTOR_ID + "=?",
+                new String[]{String.valueOf(distributorId)},
+                null, null, COL_ID + " DESC");
+        if (c != null) {
+            while (c.moveToNext()) {
+                Delivery d = new Delivery();
+                d.setId(c.getInt(c.getColumnIndexOrThrow(COL_ID)));
+                d.setStationId(c.getInt(c.getColumnIndexOrThrow(COL_DL_STATION_ID)));
+                d.setStationName(c.getString(c.getColumnIndexOrThrow(COL_DL_STATION_NAME)));
+                d.setFuelType(c.getString(c.getColumnIndexOrThrow(COL_DL_FUEL_TYPE)));
+                d.setVolumeGal(c.getDouble(c.getColumnIndexOrThrow(COL_DL_VOLUME)));
+                d.setDate(c.getString(c.getColumnIndexOrThrow(COL_DL_DATE)));
+                d.setNotes(c.getString(c.getColumnIndexOrThrow(COL_DL_NOTES)));
+                d.setDistributorId(c.getInt(c.getColumnIndexOrThrow(COL_DL_DISTRIBUTOR_ID)));
+                list.add(d);
+            }
+            c.close();
+        }
+        db.close();
+        return list;
     }
 
     private PriceAlert cursorToAlert(Cursor c) {

@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#0D1117">
+
+    <!-- HEADER -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="20dp"
+        android:background="@drawable/bg_header_gradient">
+
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:src="@drawable/ic_arrow_back"
+            android:background="@drawable/bg_icon_btn"
+            android:tint="#FFFFFF"
+            android:contentDescription="Volver"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:layout_marginStart="14dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Registrar entrega"
+                android:textSize="20sp"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Carga inventario de la estación destino"
+                android:textSize="12sp"
+                android:textColor="#B0BEC5"/>
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@drawable/ic_inventory"
+            android:tint="#42A5F5"/>
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="20dp">
+
+            <!-- FORMULARIO -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Nueva entrega"
+                android:textSize="13sp"
+                android:textColor="#B0BEC5"
+                android:textAllCaps="true"
+                android:letterSpacing="0.08"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="10dp"/>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                app:cardBackgroundColor="#161B22"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <!-- Estación destino -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Estación destino"
+                        android:textSize="12sp"
+                        android:textColor="#B0BEC5"
+                        android:layout_marginBottom="6dp"/>
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="14dp"
+                        app:cardBackgroundColor="#1E2A3A"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="0dp">
+                        <Spinner
+                            android:id="@+id/spinnerStation"
+                            android:layout_width="match_parent"
+                            android:layout_height="52dp"
+                            android:paddingStart="12dp"
+                            android:popupBackground="#161B22"/>
+                    </androidx.cardview.widget.CardView>
+
+                    <!-- Tipo combustible -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tipo de combustible"
+                        android:textSize="12sp"
+                        android:textColor="#B0BEC5"
+                        android:layout_marginBottom="6dp"/>
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="14dp"
+                        app:cardBackgroundColor="#1E2A3A"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="0dp">
+                        <Spinner
+                            android:id="@+id/spinnerFuelDelivery"
+                            android:layout_width="match_parent"
+                            android:layout_height="52dp"
+                            android:paddingStart="12dp"
+                            android:popupBackground="#161B22"/>
+                    </androidx.cardview.widget.CardView>
+
+                    <!-- Volumen -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Volumen entregado (galones)"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        app:boxBackgroundColor="#1E2A3A"
+                        app:boxStrokeColor="#2C3E50"
+                        app:hintTextColor="#B0BEC5"
+                        android:layout_marginBottom="12dp">
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etDeliveryVolume"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="numberDecimal"
+                            android:textColor="#FFFFFF"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Observaciones -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Observaciones (opcional)"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        app:boxBackgroundColor="#1E2A3A"
+                        app:boxStrokeColor="#2C3E50"
+                        app:hintTextColor="#B0BEC5"
+                        android:layout_marginBottom="16dp">
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etDeliveryNotes"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textMultiLine"
+                            android:minLines="2"
+                            android:textColor="#FFFFFF"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Botón -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnRegistrarEntrega"
+                        android:layout_width="match_parent"
+                        android:layout_height="52dp"
+                        android:text="Confirmar entrega"
+                        android:textAllCaps="false"
+                        android:textSize="15sp"
+                        app:cornerRadius="12dp"
+                        app:backgroundTint="#1565C0"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- HISTORIAL -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Historial de entregas"
+                android:textSize="13sp"
+                android:textColor="#B0BEC5"
+                android:textAllCaps="true"
+                android:letterSpacing="0.08"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="10dp"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerDeliveries"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"/>
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

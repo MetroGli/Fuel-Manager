@@ -42,48 +42,45 @@ public class ClientHome extends AppCompatActivity {
 
     private void setupCards(String role) {
 
-        // ── HU-01: Consulta precios — solo CLIENTE ──────────────
+        // ── HU-01: solo CLIENTE ──────────────────────────────
         CardView cardPrices = findViewById(R.id.cardPrices);
         if (role.equals(Roles.CLIENTE)) {
-            activate(cardPrices, null);
+            cardPrices.setVisibility(View.VISIBLE);
             cardPrices.setOnClickListener(v ->
                     startActivity(new Intent(this, StationListActivity.class)));
         } else {
             cardPrices.setVisibility(View.GONE);
         }
 
-        // ── HU-07: Inventario — ESTACION y ADMIN ────────────────
-        CardView cardInventory    = findViewById(R.id.cardInventory);
-        TextView tvInventoryBadge = findViewById(R.id.tvInventoryBadge);
+        // ── HU-07: ESTACION y ADMIN ──────────────────────────
+        CardView cardInventory = findViewById(R.id.cardInventory);
         if (role.equals(Roles.ESTACION) || role.equals(Roles.ADMIN)) {
-            activate(cardInventory, tvInventoryBadge);
+            cardInventory.setVisibility(View.VISIBLE);
             cardInventory.setOnClickListener(v ->
                     startActivity(new Intent(this, InventoryActivity.class)));
+        } else {
+            cardInventory.setVisibility(View.GONE);
         }
 
-        // ── HU-03: Ventas — ESTACION y ADMIN ────────────────────
-        CardView cardSales    = findViewById(R.id.cardSales);
-        TextView tvSalesBadge = findViewById(R.id.tvSalesBadge);
+        // ── HU-03: ESTACION y ADMIN ──────────────────────────
+        CardView cardSales = findViewById(R.id.cardSales);
         if (role.equals(Roles.ESTACION) || role.equals(Roles.ADMIN)) {
-            activate(cardSales, tvSalesBadge);
+            cardSales.setVisibility(View.VISIBLE);
             cardSales.setOnClickListener(v ->
                     startActivity(new Intent(this, SalesActivity.class)));
+        } else {
+            cardSales.setVisibility(View.GONE);
         }
 
-        // ── HU-08: Precios normativos — solo ADMIN ───────────────
-        CardView cardNormative    = findViewById(R.id.cardNormative);
-        TextView tvNormativeBadge = findViewById(R.id.tvNormativeBadge);
+        // ── HU-08: solo ADMIN ────────────────────────────────
+        CardView cardNormative = findViewById(R.id.cardNormative);
         if (role.equals(Roles.ADMIN)) {
-            activate(cardNormative, tvNormativeBadge);
+            cardNormative.setVisibility(View.VISIBLE);
             cardNormative.setOnClickListener(v ->
                     startActivity(new Intent(this, NormativePriceActivity.class)));
+        } else {
+            cardNormative.setVisibility(View.GONE);
         }
-    }
-
-    /** Activa una card: quita opacidad y oculta el badge "Próximo". */
-    private void activate(CardView card, TextView badge) {
-        card.setAlpha(1.0f);
-        if (badge != null) badge.setVisibility(View.GONE);
     }
 
     private String getRoleLabel(String role) {
