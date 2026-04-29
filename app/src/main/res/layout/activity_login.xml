@@ -135,12 +135,12 @@
                 <!-- ProgressBar -->
                 <ProgressBar
                     android:id="@+id/progressBar"
-                    android:layout_width="36dp"
+                    android:layout_width="match_parent"
                     android:layout_height="36dp"
-                    android:indeterminateTint="@color/primary"
-                    android:visibility="gone"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="16dp"/>
+                    android:layout_marginTop="16dp"
+                    android:indeterminateTint="@color/primary"
+                    android:visibility="gone" />
 
                 <!-- Botón ingresar -->
                 <com.google.android.material.button.MaterialButton

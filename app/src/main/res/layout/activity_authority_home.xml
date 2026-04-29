@@ -12,7 +12,7 @@
             <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
                 android:orientation="vertical" android:layout_weight="1">
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:text="DISTRIBUIDOR" android:textSize="11sp" android:textColor="#42A5F5"
+                    android:text="AUTORIDAD" android:textSize="11sp" android:textColor="#66BB6A"
                     android:textAllCaps="true" android:letterSpacing="0.1"
                     android:background="@drawable/badge_role"
                     android:paddingStart="10dp" android:paddingEnd="10dp"
@@ -23,44 +23,45 @@
                     android:textStyle="bold" android:layout_marginTop="8dp"/>
             </LinearLayout>
             <androidx.cardview.widget.CardView android:layout_width="44dp" android:layout_height="44dp"
-                app:cardCornerRadius="22dp" app:cardBackgroundColor="#42A5F5">
+                app:cardCornerRadius="22dp" app:cardBackgroundColor="#66BB6A">
                 <ImageView android:layout_width="24dp" android:layout_height="24dp"
                     android:src="@drawable/ic_person" android:layout_gravity="center" android:tint="#FFFFFF"/>
             </androidx.cardview.widget.CardView>
         </LinearLayout>
+
         <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
             android:text="Funciones disponibles" android:textSize="13sp" android:textColor="#B0BEC5"
             android:textAllCaps="true" android:letterSpacing="0.08"
             android:layout_marginStart="20dp" android:layout_marginTop="24dp" android:layout_marginBottom="10dp"/>
 
-        <!-- HU-09: Entrega -->
-        <androidx.cardview.widget.CardView android:id="@+id/cardDelivery"
+        <!-- HU-05: Monitor precios -->
+        <androidx.cardview.widget.CardView android:id="@+id/cardMonitor"
             android:layout_width="match_parent" android:layout_height="wrap_content"
             android:layout_marginStart="20dp" android:layout_marginEnd="20dp" android:layout_marginBottom="12dp"
             app:cardBackgroundColor="#161B22" app:cardCornerRadius="20dp" app:cardElevation="6dp">
             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                 android:orientation="horizontal" android:padding="20dp" android:gravity="center_vertical">
                 <androidx.cardview.widget.CardView android:layout_width="48dp" android:layout_height="48dp"
-                    app:cardCornerRadius="14dp" app:cardBackgroundColor="#1A42A5F5">
+                    app:cardCornerRadius="14dp" app:cardBackgroundColor="#1A66BB6A">
                     <ImageView android:layout_width="26dp" android:layout_height="26dp"
-                        android:src="@drawable/ic_inventory" android:layout_gravity="center" android:tint="#42A5F5"/>
+                        android:src="@drawable/ic_price_zone" android:layout_gravity="center" android:tint="#66BB6A"/>
                 </androidx.cardview.widget.CardView>
                 <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
                     android:orientation="vertical" android:layout_weight="1" android:layout_marginStart="16dp">
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="Registrar entrega" android:textSize="16sp"
+                        android:text="Monitoreo de precios" android:textSize="16sp"
                         android:textColor="#FFFFFF" android:textStyle="bold"/>
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="Carga inventario de la estacion destino" android:textSize="12sp"
+                        android:text="Ver precios por región · Detectar diferencias" android:textSize="12sp"
                         android:textColor="#78909C" android:layout_marginTop="3dp"/>
                 </LinearLayout>
                 <ImageView android:layout_width="20dp" android:layout_height="20dp"
-                    android:src="@drawable/ic_arrow_forward" android:tint="#42A5F5"/>
+                    android:src="@drawable/ic_arrow_forward" android:tint="#66BB6A"/>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- HU-04: Actualizar precios consumidor -->
-        <androidx.cardview.widget.CardView android:id="@+id/cardPriceUpdate"
+        <!-- HU-11: Subsidios -->
+        <androidx.cardview.widget.CardView android:id="@+id/cardSubsidy"
             android:layout_width="match_parent" android:layout_height="wrap_content"
             android:layout_marginStart="20dp" android:layout_marginEnd="20dp" android:layout_marginBottom="12dp"
             app:cardBackgroundColor="#161B22" app:cardCornerRadius="20dp" app:cardElevation="6dp">
@@ -69,15 +70,15 @@
                 <androidx.cardview.widget.CardView android:layout_width="48dp" android:layout_height="48dp"
                     app:cardCornerRadius="14dp" app:cardBackgroundColor="#1AFF8F00">
                     <ImageView android:layout_width="26dp" android:layout_height="26dp"
-                        android:src="@drawable/ic_price_zone" android:layout_gravity="center" android:tint="#FF8F00"/>
+                        android:src="@drawable/ic_fuel_drop" android:layout_gravity="center" android:tint="#FF8F00"/>
                 </androidx.cardview.widget.CardView>
                 <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
                     android:orientation="vertical" android:layout_weight="1" android:layout_marginStart="16dp">
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="Actualizar precios al consumidor" android:textSize="16sp"
+                        android:text="Gestión de subsidios" android:textSize="16sp"
                         android:textColor="#FFFFFF" android:textStyle="bold"/>
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="Modifica precios visibles para conductores" android:textSize="12sp"
+                        android:text="Asignar descuentos por región o usuario" android:textSize="12sp"
                         android:textColor="#78909C" android:layout_marginTop="3dp"/>
                 </LinearLayout>
                 <ImageView android:layout_width="20dp" android:layout_height="20dp"
@@ -85,8 +86,34 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- HU-13: Precios mayoristas -->
-        <androidx.cardview.widget.CardView android:id="@+id/cardWholesale"
+        <!-- HU-12: Recibos -->
+        <androidx.cardview.widget.CardView android:id="@+id/cardReceipts"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginStart="20dp" android:layout_marginEnd="20dp" android:layout_marginBottom="12dp"
+            app:cardBackgroundColor="#161B22" app:cardCornerRadius="20dp" app:cardElevation="6dp">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal" android:padding="20dp" android:gravity="center_vertical">
+                <androidx.cardview.widget.CardView android:layout_width="48dp" android:layout_height="48dp"
+                    app:cardCornerRadius="14dp" app:cardBackgroundColor="#1A42A5F5">
+                    <ImageView android:layout_width="26dp" android:layout_height="26dp"
+                        android:src="@drawable/ic_sale" android:layout_gravity="center" android:tint="#42A5F5"/>
+                </androidx.cardview.widget.CardView>
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:orientation="vertical" android:layout_weight="1" android:layout_marginStart="16dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="Historial de recibos" android:textSize="16sp"
+                        android:textColor="#FFFFFF" android:textStyle="bold"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="Trazabilidad completa de ventas" android:textSize="12sp"
+                        android:textColor="#78909C" android:layout_marginTop="3dp"/>
+                </LinearLayout>
+                <ImageView android:layout_width="20dp" android:layout_height="20dp"
+                    android:src="@drawable/ic_arrow_forward" android:tint="#42A5F5"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- HU-10: Reporte PDF -->
+        <androidx.cardview.widget.CardView android:id="@+id/cardReport"
             android:layout_width="match_parent" android:layout_height="wrap_content"
             android:layout_marginStart="20dp" android:layout_marginEnd="20dp" android:layout_marginBottom="12dp"
             app:cardBackgroundColor="#161B22" app:cardCornerRadius="20dp" app:cardElevation="6dp">
@@ -95,15 +122,15 @@
                 <androidx.cardview.widget.CardView android:layout_width="48dp" android:layout_height="48dp"
                     app:cardCornerRadius="14dp" app:cardBackgroundColor="#1AE65100">
                     <ImageView android:layout_width="26dp" android:layout_height="26dp"
-                        android:src="@drawable/ic_fuel_drop" android:layout_gravity="center" android:tint="#E65100"/>
+                        android:src="@drawable/ic_inventory" android:layout_gravity="center" android:tint="#E65100"/>
                 </androidx.cardview.widget.CardView>
                 <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
                     android:orientation="vertical" android:layout_weight="1" android:layout_marginStart="16dp">
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="Precios mayoristas" android:textSize="16sp"
+                        android:text="Generar reporte PDF" android:textSize="16sp"
                         android:textColor="#FFFFFF" android:textStyle="bold"/>
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="Precio de venta a estaciones de servicio" android:textSize="12sp"
+                        android:text="Estaciones · Ventas · Entregas · Normativos" android:textSize="12sp"
                         android:textColor="#78909C" android:layout_marginTop="3dp"/>
                 </LinearLayout>
                 <ImageView android:layout_width="20dp" android:layout_height="20dp"
@@ -114,7 +141,7 @@
         <com.google.android.material.button.MaterialButton android:id="@+id/btnLogout"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="match_parent" android:layout_height="52dp"
-            android:text="Cerrar sesion" android:textColor="#EF5350"
+            android:text="Cerrar sesión" android:textColor="#EF5350"
             app:strokeColor="#EF5350" app:strokeWidth="1.5dp"
             android:layout_margin="20dp" app:cornerRadius="12dp"/>
     </LinearLayout>

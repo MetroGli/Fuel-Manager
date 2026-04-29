@@ -21,6 +21,7 @@ import java.util.List;
 import co.edu.unipiloto.fuelmanager.R;
 import co.edu.unipiloto.fuelmanager.data.local.DatabaseHelper;
 import co.edu.unipiloto.fuelmanager.data.model.Delivery;
+import co.edu.unipiloto.fuelmanager.data.model.Station;
 import co.edu.unipiloto.fuelmanager.data.model.InventoryMovement;
 import co.edu.unipiloto.fuelmanager.utils.SessionManager;
 
@@ -35,7 +36,7 @@ public class DeliveryActivity extends AppCompatActivity {
 
     private DatabaseHelper    db;
     private SessionManager    session;
-    private List<String[]>    stations = new ArrayList<>(); // [id, name, address]
+    private List<Station> stations = new ArrayList<>(); // [id, name, address]
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,9 +68,11 @@ public class DeliveryActivity extends AppCompatActivity {
     private void loadStationsSpinner() {
         new Thread(() -> {
             stations = db.getAllStationsSimple();
-            String[] names = new String[stations.size()];
-            for (int i = 0; i < stations.size(); i++)
-                names[i] = stations.get(i)[1] + " · " + stations.get(i)[2];
+
+            List<String> names = new ArrayList<>();
+            for (Station s : stations) {
+                names.add(s.getName() + " · " + s.getAddress());
+            }
 
             runOnUiThread(() -> {
                 ArrayAdapter<String> sa = new ArrayAdapter<>(this,
@@ -130,9 +133,9 @@ public class DeliveryActivity extends AppCompatActivity {
         int selectedPos = spinnerStation.getSelectedItemPosition();
         if (selectedPos < 0 || selectedPos >= stations.size()) return;
 
-        String[] stationData = stations.get(selectedPos);
-        int    stationId   = Integer.parseInt(stationData[0]);
-        String stationName = stationData[1];
+        Station station = stations.get(selectedPos);
+        int    stationId   = station.getId();
+        String stationName = station.getName();
         String fuel        = spinnerFuel.getSelectedItem().toString();
         int    distId      = session.getUserId();
 

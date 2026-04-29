@@ -3,6 +3,8 @@
     package="co.edu.unipiloto.fuelmanager">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28"/>
 
     <application
         android:allowBackup="true"
@@ -76,8 +78,47 @@
             android:screenOrientation="portrait"/>
 
         <activity android:name=".distribution.DeliveryActivity"
-            android:exported="false" android:screenOrientation="portrait"
+            android:exported="false"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"/>
+
+        <activity
+            android:name=".distribution.PriceUpdateActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"/>
+
+        <activity
+            android:name=".report.ReportActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".clients.AuthorityHome"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".authority.PriceMonitorActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".authority.SubsidyActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"/>
+
+        <activity android:name=".authority.ReceiptHistoryActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".distribution.WholesalePriceActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"/>
+
+        <activity android:name=".sales.ReceiptPdfActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
 
     </application>
 </manifest>

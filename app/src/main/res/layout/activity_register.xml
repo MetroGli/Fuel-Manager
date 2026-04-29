@@ -1,242 +1,159 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/bg_main"
-    android:fillViewport="true">
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="700dp"
-        android:padding="28dp">
-
-        <!-- Decoración superior -->
-        <View
-            android:id="@+id/decorTop"
-            android:layout_width="160dp"
-            android:layout_height="160dp"
-            android:background="@drawable/shape_circle_glow"
-            android:alpha="0.18"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="-40dp"
-            android:layout_marginStart="-40dp"/>
-
-        <!-- Flecha atrás -->
-        <ImageButton
-            android:id="@+id/btnBack"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/ic_arrow_back"
-            android:background="@drawable/bg_icon_btn"
-            android:contentDescription="Volver"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="12dp" />
-
-        <!-- Título -->
-        <TextView
-            android:id="@+id/tvTitle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/register_title"
-            android:textSize="26sp"
-            android:textColor="@color/text_primary"
-            android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@id/btnBack"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="16dp"/>
-
-        <TextView
-            android:id="@+id/tvSubtitle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/register_subtitle"
-            android:textSize="14sp"
-            android:textColor="@color/text_secondary"
-            android:layout_marginTop="6dp"
-            app:layout_constraintTop_toBottomOf="@id/tvTitle"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
-
-        <View
-            android:id="@+id/divider"
-            android:layout_width="48dp"
-            android:layout_height="3dp"
-            android:background="@color/primary"
-            android:layout_marginTop="14dp"
-            app:layout_constraintTop_toBottomOf="@id/tvSubtitle"
-            app:layout_constraintStart_toStartOf="parent"/>
-
-        <!-- Card formulario -->
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardForm"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:cardBackgroundColor="@color/bg_card"
-            app:cardCornerRadius="20dp"
-            app:cardElevation="8dp"
-            android:layout_marginTop="24dp"
-            app:layout_constraintTop_toBottomOf="@id/divider"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="24dp">
-
-                <!-- Nombre -->
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilName"
-                    style="@style/Widget.FuelManager.TextInputLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/hint_name"
-                    app:startIconDrawable="@drawable/ic_person"
-                    app:startIconTint="@color/primary">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etName"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textPersonName|textCapWords"
-                        android:textColor="@color/text_primary"
-                        android:imeOptions="actionNext"/>
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <!-- Email -->
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilEmail"
-                    style="@style/Widget.FuelManager.TextInputLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/hint_email"
-                    android:layout_marginTop="14dp"
-                    app:startIconDrawable="@drawable/ic_email"
-                    app:startIconTint="@color/primary">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etEmail"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textEmailAddress"
-                        android:textColor="@color/text_primary"
-                        android:imeOptions="actionNext"/>
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <!-- Contraseña -->
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilPassword"
-                    style="@style/Widget.FuelManager.TextInputLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/hint_password"
-                    android:layout_marginTop="14dp"
-                    app:startIconDrawable="@drawable/ic_lock"
-                    app:startIconTint="@color/primary"
-                    app:endIconMode="password_toggle"
-                    app:endIconTint="@color/text_hint">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etPassword"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textPassword"
-                        android:textColor="@color/text_primary"
-                        android:imeOptions="actionNext"/>
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <!-- Confirmar contraseña -->
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilConfirmPassword"
-                    style="@style/Widget.FuelManager.TextInputLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/hint_confirm_password"
-                    android:layout_marginTop="14dp"
-                    app:startIconDrawable="@drawable/ic_lock"
-                    app:startIconTint="@color/primary"
-                    app:endIconMode="password_toggle"
-                    app:endIconTint="@color/text_hint">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etConfirmPassword"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textPassword"
-                        android:textColor="@color/text_primary"
-                        android:imeOptions="actionDone"/>
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <!-- Label rol -->
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/label_role"
-                    android:textSize="13sp"
-                    android:textColor="@color/text_hint"
-                    android:layout_marginTop="18dp"
-                    android:layout_marginStart="4dp"/>
-
-                <!-- Spinner rol -->
-                <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:cardBackgroundColor="@color/input_background"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="0dp"
-                    android:layout_marginTop="6dp">
-
-                    <Spinner
-                        android:id="@+id/spinnerRole"
-                        android:layout_width="match_parent"
-                        android:layout_height="52dp"
-                        android:paddingStart="16dp"
-                        android:paddingEnd="16dp"
-                        android:popupBackground="@color/bg_card"/>
-                </androidx.cardview.widget.CardView>
-
-                <!-- Progress -->
-                <ProgressBar
-                    android:id="@+id/progressBar"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:indeterminateTint="@color/primary"
-                    android:visibility="gone"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="16dp"/>
-
-                <!-- Botón registrar -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnRegister"
-                    style="@style/Widget.FuelManager.Button"
-                    android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:text="@string/btn_register"
-                    android:layout_marginTop="20dp"/>
-
-            </LinearLayout>
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="#0D1117" android:fillViewport="true">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="vertical" android:padding="24dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="horizontal" android:gravity="center_vertical"
+            android:layout_marginBottom="28dp">
+            <ImageButton android:id="@+id/btnBack" android:layout_width="38dp" android:layout_height="38dp"
+                android:src="@drawable/ic_arrow_back" android:background="@drawable/bg_icon_btn"
+                android:tint="#FFFFFF" android:contentDescription="Volver"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Crear cuenta" android:textSize="22sp" android:textColor="#FFFFFF"
+                android:textStyle="bold" android:layout_marginStart="14dp"/>
+        </LinearLayout>
+        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:hint="Nombre completo"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            app:boxBackgroundColor="#1E2A3A" app:boxStrokeColor="#2C3E50"
+            app:hintTextColor="#B0BEC5" android:layout_marginBottom="14dp">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/etName"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:inputType="textPersonName" android:textColor="#FFFFFF"/>
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:hint="Correo electronico"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            app:boxBackgroundColor="#1E2A3A" app:boxStrokeColor="#2C3E50"
+            app:hintTextColor="#B0BEC5" android:layout_marginBottom="14dp">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/etEmail"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:inputType="textEmailAddress" android:textColor="#FFFFFF"/>
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:hint="Contrasena"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            app:boxBackgroundColor="#1E2A3A" app:boxStrokeColor="#2C3E50"
+            app:hintTextColor="#B0BEC5" app:passwordToggleEnabled="true"
+            android:layout_marginBottom="14dp">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/etPassword"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:inputType="textPassword" android:textColor="#FFFFFF"/>
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:hint="Confirmar contrasena"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            app:boxBackgroundColor="#1E2A3A" app:boxStrokeColor="#2C3E50"
+            app:hintTextColor="#B0BEC5" app:passwordToggleEnabled="true"
+            android:layout_marginBottom="14dp">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/etConfirmPassword"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:inputType="textPassword" android:textColor="#FFFFFF"/>
+        </com.google.android.material.textfield.TextInputLayout>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="Tipo de cuenta" android:textSize="12sp" android:textColor="#B0BEC5"
+            android:layout_marginBottom="6dp"/>
+        <androidx.cardview.widget.CardView android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:layout_marginBottom="20dp"
+            app:cardBackgroundColor="#1E2A3A" app:cardCornerRadius="12dp" app:cardElevation="0dp">
+            <Spinner android:id="@+id/spinnerRole" android:layout_width="match_parent"
+                android:layout_height="52dp" android:paddingStart="12dp" android:popupBackground="#161B22"/>
         </androidx.cardview.widget.CardView>
-
-        <!-- Ir a login -->
-        <TextView
-            android:id="@+id/tvGoLogin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/have_account"
-            android:textSize="14sp"
-            android:textColor="@color/text_secondary"
-            android:layout_marginTop="20dp"
-            android:padding="8dp"
-            app:layout_constraintTop_toBottomOf="@id/cardForm"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <!-- Seccion vehiculo solo CLIENTE -->
+        <LinearLayout android:id="@+id/sectionVehicle" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:orientation="vertical"
+            android:visibility="visible">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal" android:gravity="center_vertical"
+                android:layout_marginBottom="16dp">
+                <View android:layout_width="0dp" android:layout_height="1dp"
+                    android:layout_weight="1" android:background="#2C3E50"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="  Tipo de vehiculo  " android:textSize="11sp"
+                    android:textColor="#E65100" android:textAllCaps="true" android:letterSpacing="0.06"/>
+                <View android:layout_width="0dp" android:layout_height="1dp"
+                    android:layout_weight="1" android:background="#2C3E50"/>
+            </LinearLayout>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Tu tipo de vehiculo" android:textSize="12sp"
+                android:textColor="#B0BEC5" android:layout_marginBottom="6dp"/>
+            <androidx.cardview.widget.CardView android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:layout_marginBottom="20dp"
+                app:cardBackgroundColor="#1E2A3A" app:cardCornerRadius="12dp" app:cardElevation="0dp">
+                <Spinner android:id="@+id/spinnerVehicle" android:layout_width="match_parent"
+                    android:layout_height="52dp" android:paddingStart="12dp" android:popupBackground="#161B22"/>
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
+        <!-- Seccion estacion solo ESTACION -->
+        <LinearLayout android:id="@+id/sectionStation" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:orientation="vertical"
+            android:visibility="gone">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal" android:gravity="center_vertical"
+                android:layout_marginBottom="16dp">
+                <View android:layout_width="0dp" android:layout_height="1dp"
+                    android:layout_weight="1" android:background="#2C3E50"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="  Datos de la estacion  " android:textSize="11sp"
+                    android:textColor="#E65100" android:textAllCaps="true" android:letterSpacing="0.06"/>
+                <View android:layout_width="0dp" android:layout_height="1dp"
+                    android:layout_weight="1" android:background="#2C3E50"/>
+            </LinearLayout>
+            <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:hint="Direccion de la estacion"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:boxBackgroundColor="#1E2A3A" app:boxStrokeColor="#2C3E50"
+                app:hintTextColor="#B0BEC5" android:layout_marginBottom="14dp">
+                <com.google.android.material.textfield.TextInputEditText android:id="@+id/etStationAddress"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:inputType="textPostalAddress" android:textColor="#FFFFFF"/>
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:hint="Zona (ej: Bogota Norte)"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:boxBackgroundColor="#1E2A3A" app:boxStrokeColor="#2C3E50"
+                app:hintTextColor="#B0BEC5" android:layout_marginBottom="14dp">
+                <com.google.android.material.textfield.TextInputEditText android:id="@+id/etStationZone"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:textColor="#FFFFFF"/>
+            </com.google.android.material.textfield.TextInputLayout>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Precios por galon (COP)" android:textSize="12sp"
+                android:textColor="#B0BEC5" android:layout_marginBottom="10dp"/>
+            <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:hint="Corriente"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:boxBackgroundColor="#1E2A3A" app:boxStrokeColor="#2C3E50"
+                app:hintTextColor="#B0BEC5" android:layout_marginBottom="10dp">
+                <com.google.android.material.textfield.TextInputEditText android:id="@+id/etPriceCorriente"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:inputType="numberDecimal" android:textColor="#FFFFFF"/>
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:hint="Extra"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:boxBackgroundColor="#1E2A3A" app:boxStrokeColor="#2C3E50"
+                app:hintTextColor="#B0BEC5" android:layout_marginBottom="10dp">
+                <com.google.android.material.textfield.TextInputEditText android:id="@+id/etPriceExtra"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:inputType="numberDecimal" android:textColor="#FFFFFF"/>
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:hint="ACPM"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:boxBackgroundColor="#1E2A3A" app:boxStrokeColor="#2C3E50"
+                app:hintTextColor="#B0BEC5" android:layout_marginBottom="20dp">
+                <com.google.android.material.textfield.TextInputEditText android:id="@+id/etPriceAcpm"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:inputType="numberDecimal" android:textColor="#FFFFFF"/>
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+        <com.google.android.material.button.MaterialButton android:id="@+id/btnRegister"
+            android:layout_width="match_parent" android:layout_height="52dp"
+            android:text="Crear cuenta" android:textAllCaps="false" android:textSize="16sp"
+            android:textStyle="bold" app:cornerRadius="14dp" app:backgroundTint="#E65100"/>
+    </LinearLayout>
 </ScrollView>

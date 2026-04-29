@@ -13,6 +13,7 @@ import co.edu.unipiloto.fuelmanager.R;
 import co.edu.unipiloto.fuelmanager.auth.LoginActivity;
 import co.edu.unipiloto.fuelmanager.inventory.InventoryActivity;
 import co.edu.unipiloto.fuelmanager.normative.NormativePriceActivity;
+import co.edu.unipiloto.fuelmanager.sales.ReceiptPdfActivity;
 import co.edu.unipiloto.fuelmanager.sales.SalesActivity;
 import co.edu.unipiloto.fuelmanager.stations.StationListActivity;
 import co.edu.unipiloto.fuelmanager.utils.Roles;
@@ -36,7 +37,6 @@ public class ClientHome extends AppCompatActivity {
         tvRoleBadge.setText(getRoleLabel(role));
 
         setupCards(role);
-
         findViewById(R.id.btnLogout).setOnClickListener(v -> confirmLogout());
     }
 
@@ -70,6 +70,18 @@ public class ClientHome extends AppCompatActivity {
                     startActivity(new Intent(this, SalesActivity.class)));
         } else {
             cardSales.setVisibility(View.GONE);
+        }
+
+        // ── HU-12: Recibos PDF — ESTACION y ADMIN ────────────
+        CardView cardReceipts = findViewById(R.id.cardReceipts);
+        if (cardReceipts != null) {
+            if (role.equals(Roles.ESTACION) || role.equals(Roles.ADMIN)) {
+                cardReceipts.setVisibility(View.VISIBLE);
+                cardReceipts.setOnClickListener(v ->
+                        startActivity(new Intent(this, ReceiptPdfActivity.class)));
+            } else {
+                cardReceipts.setVisibility(View.GONE);
+            }
         }
 
         // ── HU-08: solo ADMIN ────────────────────────────────

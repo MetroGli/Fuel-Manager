@@ -69,7 +69,7 @@ public class LoginActivity extends AppCompatActivity {
 
         setLoading(true);
 
-        // Ejecutar en hilo secundario para no bloquear UI
+
         new Thread(() -> {
             User user = authRepository.getUser(email,password);
 
