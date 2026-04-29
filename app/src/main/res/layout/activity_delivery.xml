@@ -35,7 +35,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Registrar Venta"
+                android:text="Registrar entrega"
                 android:textSize="20sp"
                 android:textColor="#FFFFFF"
                 android:textStyle="bold"/>
@@ -43,16 +43,16 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Descuenta del inventario automáticamente"
+                android:text="Carga inventario de la estación destino"
                 android:textSize="12sp"
                 android:textColor="#B0BEC5"/>
         </LinearLayout>
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@drawable/ic_sale"
-            android:tint="#66BB6A"/>
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@drawable/ic_inventory"
+            android:tint="#42A5F5"/>
     </LinearLayout>
 
     <ScrollView
@@ -70,7 +70,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Nueva venta"
+                android:text="Nueva entrega"
                 android:textSize="13sp"
                 android:textColor="#B0BEC5"
                 android:textAllCaps="true"
@@ -94,11 +94,11 @@
                     android:orientation="vertical"
                     android:padding="20dp">
 
-                    <!-- usuario -->
+                    <!-- Estación destino -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Usuario"
+                        android:text="Estación destino"
                         android:textSize="12sp"
                         android:textColor="#B0BEC5"
                         android:layout_marginBottom="6dp"/>
@@ -111,21 +111,21 @@
                         app:cardCornerRadius="12dp"
                         app:cardElevation="0dp">
                         <Spinner
-                            android:id="@+id/spinnerClient"
+                            android:id="@+id/spinnerStation"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp" />
+                            android:layout_height="52dp"
+                            android:paddingStart="12dp"
+                            android:popupBackground="#161B22"/>
                     </androidx.cardview.widget.CardView>
 
                     <!-- Tipo combustible -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Combustible"
+                        android:text="Tipo de combustible"
                         android:textSize="12sp"
                         android:textColor="#B0BEC5"
                         android:layout_marginBottom="6dp"/>
-
 
                     <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
@@ -135,100 +135,60 @@
                         app:cardCornerRadius="12dp"
                         app:cardElevation="0dp">
                         <Spinner
-                            android:id="@+id/spinnerFuelSale"
+                            android:id="@+id/spinnerFuelDelivery"
                             android:layout_width="match_parent"
-                            android:layout_height="48dp"
+                            android:layout_height="52dp"
                             android:paddingStart="12dp"
                             android:popupBackground="#161B22"/>
                     </androidx.cardview.widget.CardView>
-
-                    <!-- Stock disponible -->
-                    <TextView
-                        android:id="@+id/tvStockInfo"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Stock disponible: --"
-                        android:textSize="12sp"
-                        android:textColor="#66BB6A"
-                        android:layout_marginBottom="14dp"
-                        android:paddingStart="4dp"/>
 
                     <!-- Volumen -->
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Volumen a vender (galones)"
+                        android:hint="Volumen entregado (galones)"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         app:boxBackgroundColor="#1E2A3A"
                         app:boxStrokeColor="#2C3E50"
                         app:hintTextColor="#B0BEC5"
                         android:layout_marginBottom="12dp">
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etSaleVolume"
+                            android:id="@+id/etDeliveryVolume"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="numberDecimal"
                             android:textColor="#FFFFFF"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <!-- Precio por galón -->
+                    <!-- Observaciones -->
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Precio por galón (COP)"
+                        android:hint="Observaciones (opcional)"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         app:boxBackgroundColor="#1E2A3A"
                         app:boxStrokeColor="#2C3E50"
                         app:hintTextColor="#B0BEC5"
-                        android:layout_marginBottom="12dp">
+                        android:layout_marginBottom="16dp">
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etSalePrice"
+                            android:id="@+id/etDeliveryNotes"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="numberDecimal"
+                            android:inputType="textMultiLine"
+                            android:minLines="2"
                             android:textColor="#FFFFFF"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <!-- Placa -->
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Placa del vehículo (opcional)"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                        app:boxBackgroundColor="#1E2A3A"
-                        app:boxStrokeColor="#2C3E50"
-                        app:hintTextColor="#B0BEC5"
-                        android:layout_marginBottom="12dp">
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etSalePlate"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="textCapCharacters"
-                            android:textColor="#FFFFFF"/>
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <!-- Total calculado -->
-                    <TextView
-                        android:id="@+id/tvSaleTotal"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Total: $0"
-                        android:textSize="18sp"
-                        android:textColor="#66BB6A"
-                        android:textStyle="bold"
-                        android:gravity="end"
-                        android:layout_marginBottom="16dp"/>
-
-                    <!-- Botón registrar -->
+                    <!-- Botón -->
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnRegistrarVenta"
+                        android:id="@+id/btnRegistrarEntrega"
                         android:layout_width="match_parent"
                         android:layout_height="52dp"
-                        android:text="Registrar venta"
+                        android:text="Confirmar entrega"
                         android:textAllCaps="false"
                         android:textSize="15sp"
                         app:cornerRadius="12dp"
-                        app:backgroundTint="#2E7D32"/>
+                        app:backgroundTint="#1565C0"/>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
@@ -236,7 +196,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Historial de ventas"
+                android:text="Historial de entregas"
                 android:textSize="13sp"
                 android:textColor="#B0BEC5"
                 android:textAllCaps="true"
@@ -246,7 +206,7 @@
                 android:layout_marginBottom="10dp"/>
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerSales"
+                android:id="@+id/recyclerDeliveries"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:nestedScrollingEnabled="false"/>

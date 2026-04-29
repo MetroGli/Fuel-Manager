@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:layout_marginStart="16dp" android:layout_marginEnd="16dp"
+    android:layout_marginTop="5dp" android:layout_marginBottom="5dp"
+    app:cardBackgroundColor="#161B22" app:cardCornerRadius="14dp" app:cardElevation="2dp">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="vertical" android:padding="16dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="horizontal" android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+            <TextView android:id="@+id/tvSubsidyTarget" android:layout_width="0dp"
+                android:layout_height="wrap_content" android:layout_weight="1"
+                android:textSize="14sp" android:textColor="#FFFFFF" android:textStyle="bold"/>
+            <TextView android:id="@+id/tvSubsidyStatus" android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:textSize="12sp" android:textColor="#66BB6A"/>
+        </LinearLayout>
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="horizontal" android:layout_marginBottom="6dp">
+            <TextView android:id="@+id/tvSubsidyFuel" android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:textSize="12sp" android:textColor="#FF8F00"/>
+            <TextView android:id="@+id/tvSubsidyDiscount" android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:textSize="12sp"
+                android:textColor="#66BB6A" android:layout_marginStart="12dp"/>
+        </LinearLayout>
+        <TextView android:id="@+id/tvSubsidyDates" android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:textSize="11sp"
+            android:textColor="#546E7A" android:layout_marginBottom="10dp"/>
+        <com.google.android.material.button.MaterialButton android:id="@+id/btnDeactivateSubsidy"
+            android:layout_width="wrap_content" android:layout_height="36dp"
+            android:text="Desactivar" android:textSize="12sp" android:textAllCaps="false"
+            app:cornerRadius="8dp" app:backgroundTint="#EF5350"/>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

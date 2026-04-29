@@ -1,5 +1,6 @@
 package co.edu.unipiloto.fuelmanager.inventory;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -22,28 +23,21 @@ import java.util.List;
 import java.util.Locale;
 
 import co.edu.unipiloto.fuelmanager.R;
+import co.edu.unipiloto.fuelmanager.data.local.DatabaseHelper;
 import co.edu.unipiloto.fuelmanager.data.model.InventoryMovement;
 import co.edu.unipiloto.fuelmanager.data.model.InventoryStock;
-import co.edu.unipiloto.fuelmanager.utils.SessionManager;
-
-import co.edu.unipiloto.fuelmanager.normative.NormativePriceRepository;
-import android.content.Intent;
 import co.edu.unipiloto.fuelmanager.normative.NormativePriceActivity;
+import co.edu.unipiloto.fuelmanager.normative.NormativePriceRepository;
+import co.edu.unipiloto.fuelmanager.utils.SessionManager;
 
 public class InventoryActivity extends AppCompatActivity {
 
-
-    private MaterialButton btnActualizarPrecios;
     private NormativePriceRepository normativeRepo;
     private TextView tvStockCorriente, tvStockExtra, tvStockAcpm;
     private TextView tvAlertCorriente, tvAlertExtra, tvAlertAcpm;
-
-
     private Spinner spinnerFuel, spinnerMovType;
     private TextInputEditText etVolume, etNote;
     private MaterialButton btnEntrada, btnSalida, btnRegistrar;
-
-
     private RecyclerView recyclerMovements;
     private InventoryMovAdapter adapter;
 
@@ -51,7 +45,7 @@ public class InventoryActivity extends AppCompatActivity {
     private int stationId;
     private String selectedMovType = InventoryMovement.TYPE_ENTRADA;
 
-    private static final double STOCK_MIN_GAL = 50.0; // alerta si hay menos
+    private static final double STOCK_MIN_GAL = 50.0;
     private static final NumberFormat FMT = new NumberFormat() {
         { setMaximumFractionDigits(1); setMinimumFractionDigits(0); }
         @Override public StringBuffer format(double number, StringBuffer toAppendTo, java.text.FieldPosition pos) {
@@ -68,9 +62,10 @@ public class InventoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inventory);
 
-
         SessionManager session = new SessionManager(this);
-        stationId = session.getUserId();
+        int userId = session.getUserId();
+
+        stationId = DatabaseHelper.getInstance(this).getStationIdByUserId(userId);
 
         repository = new InventoryRepository(this);
 
@@ -82,7 +77,6 @@ public class InventoryActivity extends AppCompatActivity {
 
         btnRegistrar.setOnClickListener(v -> registrarMovimiento());
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
-
         findViewById(R.id.btnIrAPrecios).setOnClickListener(v ->
                 startActivity(new Intent(this, NormativePriceActivity.class)));
     }
@@ -95,15 +89,14 @@ public class InventoryActivity extends AppCompatActivity {
         tvAlertExtra      = findViewById(R.id.tvAlertExtra);
         tvAlertAcpm       = findViewById(R.id.tvAlertAcpm);
         spinnerFuel       = findViewById(R.id.spinnerFuel);
-        spinnerMovType    = findViewById(R.id.spinnerMovType); // no usado en UI, driven by toggle
+        spinnerMovType    = findViewById(R.id.spinnerMovType);
         etVolume          = findViewById(R.id.etVolume);
         etNote            = findViewById(R.id.etNote);
         btnEntrada        = findViewById(R.id.btnTypeEntrada);
         btnSalida         = findViewById(R.id.btnTypeSalida);
         btnRegistrar      = findViewById(R.id.btnRegistrar);
         recyclerMovements = findViewById(R.id.recyclerMovements);
-        normativeRepo = new NormativePriceRepository(this);
-
+        normativeRepo     = new NormativePriceRepository(this);
     }
 
     private void setupSpinners() {
@@ -119,7 +112,6 @@ public class InventoryActivity extends AppCompatActivity {
 
     private void setupMovTypeToggle() {
         setMovType(InventoryMovement.TYPE_ENTRADA);
-
         btnEntrada.setOnClickListener(v -> setMovType(InventoryMovement.TYPE_ENTRADA));
         btnSalida.setOnClickListener(v  -> setMovType(InventoryMovement.TYPE_SALIDA));
     }
@@ -158,8 +150,6 @@ public class InventoryActivity extends AppCompatActivity {
         tvStockCorriente.setText(formatGal(stock.getCorrienteGal()));
         tvStockExtra.setText(formatGal(stock.getExtraGal()));
         tvStockAcpm.setText(formatGal(stock.getAcpmGal()));
-
-
         setAlert(tvAlertCorriente, stock.getCorrienteGal());
         setAlert(tvAlertExtra,     stock.getExtraGal());
         setAlert(tvAlertAcpm,      stock.getAcpmGal());
@@ -197,12 +187,12 @@ public class InventoryActivity extends AppCompatActivity {
             return;
         }
 
-
         if (selectedMovType.equals(InventoryMovement.TYPE_SALIDA)) {
             InventoryStock stock = repository.getCurrentStock(stationId);
             if (volume > stock.getStock(fuel)) {
                 Toast.makeText(this,
-                        "⚠ Stock insuficiente de " + fuel + ": solo hay " + formatGal(stock.getStock(fuel)),
+                        "⚠ Stock insuficiente de " + fuel + ": solo hay " +
+                                formatGal(stock.getStock(fuel)),
                         Toast.LENGTH_LONG).show();
                 return;
             }
@@ -222,7 +212,7 @@ public class InventoryActivity extends AppCompatActivity {
                             Toast.LENGTH_SHORT).show();
                     etVolume.setText("");
                     etNote.setText("");
-                    loadData(); // refresca stock y lista
+                    loadData();
                 } else {
                     Toast.makeText(this, "Error al registrar", Toast.LENGTH_SHORT).show();
                 }
@@ -233,5 +223,4 @@ public class InventoryActivity extends AppCompatActivity {
     private String formatGal(double gal) {
         return String.format(Locale.getDefault(), "%.1f gal", gal);
     }
-
 }

@@ -37,7 +37,6 @@ public class AlertsActivity extends AppCompatActivity {
 
         adapter = new AlertsAdapter(new ArrayList<>(), (alert, activate) -> {
             if (activate) {
-                // reactivar
                 alert.setActive(true);
                 db.upsertAlert(alert);
             } else {

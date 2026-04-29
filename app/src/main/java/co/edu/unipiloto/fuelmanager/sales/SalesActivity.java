@@ -2,6 +2,8 @@ package co.edu.unipiloto.fuelmanager.sales;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -25,22 +27,29 @@ import co.edu.unipiloto.fuelmanager.data.local.DatabaseHelper;
 import co.edu.unipiloto.fuelmanager.data.model.FuelSale;
 import co.edu.unipiloto.fuelmanager.data.model.InventoryMovement;
 import co.edu.unipiloto.fuelmanager.data.model.InventoryStock;
+import co.edu.unipiloto.fuelmanager.data.model.Station;
+import co.edu.unipiloto.fuelmanager.data.model.Subsidy;
+import co.edu.unipiloto.fuelmanager.data.model.User;
 import co.edu.unipiloto.fuelmanager.inventory.InventoryRepository;
 import co.edu.unipiloto.fuelmanager.utils.SessionManager;
 
 public class SalesActivity extends AppCompatActivity {
 
-    private Spinner            spinnerFuel;
-    private TextInputEditText  etVolume, etPricePerGal, etPlate;
-    private TextView           tvTotal, tvStockInfo;
-    private MaterialButton     btnRegistrar;
-    private RecyclerView       recyclerSales;
-    private SalesAdapter       adapter;
+    private Spinner           spinnerFuel;
+    private Spinner           spinnerClient;
+    private TextInputEditText etVolume, etPricePerGal, etPlate;
+    private TextView          tvTotal, tvStockInfo, tvSubsidyInfo;
+    private MaterialButton    btnRegistrar;
+    private RecyclerView      recyclerSales;
+    private SalesAdapter      adapter;
 
-    private DatabaseHelper     db;
+    private DatabaseHelper      db;
     private InventoryRepository inventoryRepo;
-    private SessionManager     session;
-    private int                stationId;
+    private SessionManager      session;
+    private int                 stationId;
+
+    private List<User> clientUsers = new ArrayList<>();
+    private User       selectedClient = null;
 
     private static final NumberFormat COP =
             NumberFormat.getInstance(new Locale("es", "CO"));
@@ -51,12 +60,16 @@ public class SalesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sales);
 
         session       = new SessionManager(this);
-        stationId     = session.getUserId();
         db            = DatabaseHelper.getInstance(this);
         inventoryRepo = new InventoryRepository(this);
 
+        int userId = session.getUserId();
+        stationId  = db.getStationIdByUserId(userId);
+        if (stationId < 0) stationId = userId;
+
         bindViews();
-        setupSpinner();
+        setupFuelSpinner();
+        setupClientSpinner();
         setupRecycler();
         setupPriceCalculator();
         loadSales();
@@ -66,17 +79,19 @@ public class SalesActivity extends AppCompatActivity {
     }
 
     private void bindViews() {
-        spinnerFuel  = findViewById(R.id.spinnerFuelSale);
-        etVolume     = findViewById(R.id.etSaleVolume);
-        etPricePerGal= findViewById(R.id.etSalePrice);
-        etPlate      = findViewById(R.id.etSalePlate);
-        tvTotal      = findViewById(R.id.tvSaleTotal);
-        tvStockInfo  = findViewById(R.id.tvStockInfo);
-        btnRegistrar = findViewById(R.id.btnRegistrarVenta);
-        recyclerSales= findViewById(R.id.recyclerSales);
+        spinnerFuel   = findViewById(R.id.spinnerFuelSale);
+        spinnerClient = findViewById(R.id.spinnerClient);
+        etVolume      = findViewById(R.id.etSaleVolume);
+        etPricePerGal = findViewById(R.id.etSalePrice);
+        etPlate       = findViewById(R.id.etSalePlate);
+        tvTotal       = findViewById(R.id.tvSaleTotal);
+        tvStockInfo   = findViewById(R.id.tvStockInfo);
+        tvSubsidyInfo = findViewById(R.id.tvSubsidyTarget);
+        btnRegistrar  = findViewById(R.id.btnRegistrarVenta);
+        recyclerSales = findViewById(R.id.recyclerSales);
     }
 
-    private void setupSpinner() {
+    private void setupFuelSpinner() {
         String[] fuels = {
                 InventoryMovement.FUEL_CORRIENTE,
                 InventoryMovement.FUEL_EXTRA,
@@ -85,17 +100,96 @@ public class SalesActivity extends AppCompatActivity {
         ArrayAdapter<String> fa = new ArrayAdapter<>(this, R.layout.spinner_item, fuels);
         fa.setDropDownViewResource(R.layout.spinner_dropdown_item);
         spinnerFuel.setAdapter(fa);
-
-        // Al cambiar combustible, mostrar stock disponible
-        spinnerFuel.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(android.widget.AdapterView<?> p, android.view.View v, int pos, long id) {
+        spinnerFuel.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override public void onItemSelected(AdapterView<?> p, View v, int pos, long id) {
                 updateStockInfo();
+                refreshSubsidyInfo(); // recalcular al cambiar combustible
             }
-            @Override
-            public void onNothingSelected(android.widget.AdapterView<?> p) {}
+            @Override public void onNothingSelected(AdapterView<?> p) {}
         });
     }
+
+    private void setupClientSpinner() {
+        new Thread(() -> {
+            clientUsers = db.getUsersByRole("CLIENTE");
+
+            List<String> names = new ArrayList<>();
+            names.add("— Sin usuario / venta directa —");
+            for (User u : clientUsers) {
+                String vt = u.getVehicleType() != null ? " · " + u.getVehicleType() : "";
+                names.add(u.getName() + vt);
+            }
+
+            runOnUiThread(() -> {
+                ArrayAdapter<String> ca = new ArrayAdapter<>(this, R.layout.spinner_item, names);
+                ca.setDropDownViewResource(R.layout.spinner_dropdown_item);
+                spinnerClient.setAdapter(ca);
+                spinnerClient.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override public void onItemSelected(AdapterView<?> p, View v, int pos, long id) {
+                        selectedClient = (pos == 0) ? null : clientUsers.get(pos - 1);
+                        refreshSubsidyInfo();
+                    }
+                    @Override public void onNothingSelected(AdapterView<?> p) {}
+                });
+            });
+        }).start();
+    }
+
+    private void refreshSubsidyInfo() {
+        if (tvSubsidyInfo == null) return;
+        String fuel = spinnerFuel.getSelectedItem() != null
+                ? spinnerFuel.getSelectedItem().toString() : "Corriente";
+
+        new Thread(() -> {
+            Subsidy subsidy = null;
+
+            if (selectedClient != null) {
+                // Por userId
+                subsidy = db.getActiveSubsidyForUser(
+                        String.valueOf(selectedClient.getId()), fuel);
+                // Por tipo de vehículo
+                if (subsidy == null && selectedClient.getVehicleType() != null) {
+                    subsidy = db.getActiveSubsidyForUser(
+                            selectedClient.getVehicleType(), fuel);
+                }
+            }
+
+            // Por zona de la estación
+            if (subsidy == null) {
+                Station st = db.getStationById(stationId);
+                if (st != null) {
+                    subsidy = db.getActiveSubsidyByZone(st.getZone(), fuel);
+                }
+            }
+
+            final Subsidy found = subsidy;
+            runOnUiThread(() -> {
+                if (found != null) {
+                    tvSubsidyInfo.setVisibility(View.VISIBLE);
+                    tvSubsidyInfo.setText("🏷 Subsidio: -" + (int) found.getDiscountPct() +
+                            "% · " + found.getTargetType() + ": " + found.getTargetValue());
+                    tvSubsidyInfo.setTextColor(0xFF66BB6A);
+
+                    // Auto-aplicar descuento si el campo precio ya tiene valor
+                    String priceStr = etPricePerGal.getText() != null
+                            ? etPricePerGal.getText().toString().trim() : "";
+                    if (!priceStr.isEmpty()) {
+                        try {
+                            double base = Double.parseDouble(priceStr);
+                            double discounted = base * (1.0 - found.getDiscountPct() / 100.0);
+                            // Solo actualizar si el precio no es ya el descontado
+                            etPricePerGal.setText(
+                                    String.format(Locale.getDefault(), "%.2f", discounted));
+                        } catch (NumberFormatException ignored) {}
+                    }
+                } else {
+                    tvSubsidyInfo.setVisibility(View.GONE);
+                }
+            });
+        }).start();
+    }
+
+    // ── Recycler / calculadora (sin cambios estructurales) ──────────────────
 
     private void setupRecycler() {
         adapter = new SalesAdapter(new ArrayList<>());
@@ -103,15 +197,14 @@ public class SalesActivity extends AppCompatActivity {
         recyclerSales.setAdapter(adapter);
     }
 
-    /** Recalcula el total en tiempo real al cambiar volumen o precio. */
     private void setupPriceCalculator() {
-        android.text.TextWatcher watcher = new android.text.TextWatcher() {
+        android.text.TextWatcher w = new android.text.TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int st, int c, int af) {}
             @Override public void onTextChanged(CharSequence s, int st, int b, int c) { recalcTotal(); }
             @Override public void afterTextChanged(android.text.Editable s) {}
         };
-        etVolume.addTextChangedListener(watcher);
-        etPricePerGal.addTextChangedListener(watcher);
+        etVolume.addTextChangedListener(w);
+        etPricePerGal.addTextChangedListener(w);
     }
 
     private void recalcTotal() {
@@ -119,52 +212,40 @@ public class SalesActivity extends AppCompatActivity {
             double vol   = Double.parseDouble(etVolume.getText().toString().trim());
             double price = Double.parseDouble(etPricePerGal.getText().toString().trim());
             tvTotal.setText("Total: $" + COP.format(vol * price));
-        } catch (NumberFormatException e) {
-            tvTotal.setText("Total: $0");
-        }
+        } catch (NumberFormatException e) { tvTotal.setText("Total: $0"); }
     }
 
     private void updateStockInfo() {
         new Thread(() -> {
             InventoryStock stock = inventoryRepo.getCurrentStock(stationId);
             String fuel = spinnerFuel.getSelectedItem().toString();
-            double available = stock.getStock(fuel);
-            runOnUiThread(() ->
-                    tvStockInfo.setText("Stock disponible: " +
-                            String.format(Locale.getDefault(), "%.1f gal", available))
-            );
+            double avail = stock.getStock(fuel);
+            runOnUiThread(() -> tvStockInfo.setText("Stock disponible: " +
+                    String.format(Locale.getDefault(), "%.1f gal", avail)));
         }).start();
     }
 
+    // ── Registrar venta ─────────────────────────────────────────────────────
+
     private void registrarVenta() {
-        String volStr   = etVolume.getText()     != null ? etVolume.getText().toString().trim()      : "";
+        String volStr   = etVolume.getText()      != null ? etVolume.getText().toString().trim()      : "";
         String priceStr = etPricePerGal.getText() != null ? etPricePerGal.getText().toString().trim() : "";
         String plate    = etPlate.getText()       != null ? etPlate.getText().toString().trim()       : "";
         String fuel     = spinnerFuel.getSelectedItem().toString();
 
-        if (TextUtils.isEmpty(volStr)) {
-            etVolume.setError("Ingresa el volumen");
-            return;
-        }
-        if (TextUtils.isEmpty(priceStr)) {
-            etPricePerGal.setError("Ingresa el precio por galón");
-            return;
-        }
+        if (TextUtils.isEmpty(volStr))   { etVolume.setError("Ingresa el volumen"); return; }
+        if (TextUtils.isEmpty(priceStr)) { etPricePerGal.setError("Ingresa el precio"); return; }
 
         double volume, pricePerGal;
         try {
             volume      = Double.parseDouble(volStr);
             pricePerGal = Double.parseDouble(priceStr);
-        } catch (NumberFormatException e) {
-            etVolume.setError("Número inválido");
-            return;
-        }
+        } catch (NumberFormatException e) { etVolume.setError("Número inválido"); return; }
 
-        if (volume <= 0) { etVolume.setError("Debe ser mayor a 0"); return; }
+        if (volume <= 0)      { etVolume.setError("Debe ser mayor a 0"); return; }
         if (pricePerGal <= 0) { etPricePerGal.setError("Debe ser mayor a 0"); return; }
 
         new Thread(() -> {
-            // 1. Verificar stock
             InventoryStock stock = inventoryRepo.getCurrentStock(stationId);
             if (volume > stock.getStock(fuel)) {
                 runOnUiThread(() -> Toast.makeText(this,
@@ -175,38 +256,31 @@ public class SalesActivity extends AppCompatActivity {
             }
 
             String now = new Date().toString();
-
-            // 2. Registrar la venta
             FuelSale sale = new FuelSale(fuel, volume, pricePerGal, plate, now, stationId);
             long saleId = db.insertSale(sale);
 
-            // 3. Descontar automáticamente del inventario (SALIDA)
-            db.insertInventoryMovement(
-                    fuel,
-                    InventoryMovement.TYPE_SALIDA,
-                    volume,
-                    "Venta #" + saleId + (plate.isEmpty() ? "" : " · " + plate),
-                    now,
-                    stationId
-            );
+            db.insertInventoryMovement(fuel, InventoryMovement.TYPE_SALIDA, volume,
+                    "Venta #" + saleId + (plate.isEmpty() ? "" : " · " + plate), now, stationId);
+
+            // HU-12: recibo automático
+            db.insertReceipt(saleId, fuel, volume, pricePerGal, volume * pricePerGal, plate, now, stationId);
 
             loadSales();
-
             runOnUiThread(() -> {
-                Toast.makeText(this,
-                        "Venta registrada ✓ · Total: $" + COP.format(volume * pricePerGal),
-                        Toast.LENGTH_LONG).show();
-                etVolume.setText("");
-                etPricePerGal.setText("");
-                etPlate.setText("");
+                Toast.makeText(this, "Venta #" + saleId + " registrada ✓  $" +
+                        COP.format(volume * pricePerGal), Toast.LENGTH_LONG).show();
+                etVolume.setText(""); etPricePerGal.setText(""); etPlate.setText("");
                 tvTotal.setText("Total: $0");
                 updateStockInfo();
             });
         }).start();
     }
 
+    // ── Cargar historial (filtrado por estación — solo las propias) ─────────
+
     private void loadSales() {
         new Thread(() -> {
+            // db.getSales(stationId) ya filtra por estación correctamente
             List<FuelSale> sales = db.getSales(stationId);
             runOnUiThread(() -> adapter.updateData(sales));
         }).start();
