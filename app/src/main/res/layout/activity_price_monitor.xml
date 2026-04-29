@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical" android:background="#0D1117">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="horizontal" android:gravity="center_vertical"
+        android:padding="20dp" android:background="@drawable/bg_header_gradient">
+        <ImageButton android:id="@+id/btnBack" android:layout_width="38dp" android:layout_height="38dp"
+            android:src="@drawable/ic_arrow_back" android:background="@drawable/bg_icon_btn"
+            android:tint="#FFFFFF" android:contentDescription="Volver"/>
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+            android:orientation="vertical" android:layout_weight="1" android:layout_marginStart="14dp">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Monitoreo de precios" android:textSize="20sp"
+                android:textColor="#FFFFFF" android:textStyle="bold"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Precios por region - Autoridad Reguladora" android:textSize="12sp"
+                android:textColor="#B0BEC5"/>
+        </LinearLayout>
+    </LinearLayout>
+    <androidx.cardview.widget.CardView android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:layout_margin="16dp"
+        app:cardBackgroundColor="#161B22" app:cardCornerRadius="14dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical" android:padding="14dp">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Filtrar por zona" android:textSize="12sp" android:textColor="#B0BEC5"
+                android:layout_marginBottom="8dp"/>
+            <androidx.cardview.widget.CardView android:layout_width="match_parent"
+                android:layout_height="wrap_content" app:cardBackgroundColor="#1E2A3A"
+                app:cardCornerRadius="10dp" app:cardElevation="0dp">
+                <Spinner android:id="@+id/spinnerMonitorZone" android:layout_width="match_parent"
+                    android:layout_height="48dp" android:paddingStart="12dp" android:popupBackground="#161B22"/>
+            </androidx.cardview.widget.CardView>
+            <TextView android:id="@+id/tvMonitorSummary" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:text="Cargando estadisticas..."
+                android:textSize="12sp" android:textColor="#66BB6A" android:layout_marginTop="10dp"
+                android:lineSpacingExtra="3dp"/>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+    <androidx.recyclerview.widget.RecyclerView android:id="@+id/recyclerMonitor"
+        android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1"
+        android:paddingBottom="12dp" android:clipToPadding="false"/>
+</LinearLayout>

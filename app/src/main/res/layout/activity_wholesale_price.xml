@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical" android:background="#0D1117">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="horizontal" android:gravity="center_vertical"
+        android:padding="20dp" android:background="@drawable/bg_header_gradient">
+        <ImageButton android:id="@+id/btnBack" android:layout_width="38dp" android:layout_height="38dp"
+            android:src="@drawable/ic_arrow_back" android:background="@drawable/bg_icon_btn"
+            android:tint="#FFFFFF" android:contentDescription="Volver"/>
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+            android:orientation="vertical" android:layout_weight="1" android:layout_marginStart="14dp">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Precios mayoristas" android:textSize="20sp"
+                android:textColor="#FFFFFF" android:textStyle="bold"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Precio de venta a estaciones de servicio"
+                android:textSize="12sp" android:textColor="#B0BEC5"/>
+        </LinearLayout>
+        <ImageView android:layout_width="28dp" android:layout_height="28dp"
+            android:src="@drawable/ic_price_zone" android:tint="#FF8F00"/>
+    </LinearLayout>
+    <ScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical" android:paddingBottom="20dp">
+            <androidx.cardview.widget.CardView android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:layout_margin="16dp"
+                app:cardBackgroundColor="#161B22" app:cardCornerRadius="20dp" app:cardElevation="4dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="vertical" android:padding="20dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="Estacion destino" android:textSize="12sp"
+                        android:textColor="#B0BEC5" android:layout_marginBottom="6dp"/>
+                    <androidx.cardview.widget.CardView android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:layout_marginBottom="14dp"
+                        app:cardBackgroundColor="#1E2A3A" app:cardCornerRadius="12dp" app:cardElevation="0dp">
+                        <Spinner android:id="@+id/spinnerWholesaleStation"
+                            android:layout_width="match_parent" android:layout_height="52dp"
+                            android:paddingStart="12dp" android:popupBackground="#161B22"/>
+                    </androidx.cardview.widget.CardView>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="Combustible" android:textSize="12sp"
+                        android:textColor="#B0BEC5" android:layout_marginBottom="6dp"/>
+                    <androidx.cardview.widget.CardView android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:layout_marginBottom="14dp"
+                        app:cardBackgroundColor="#1E2A3A" app:cardCornerRadius="12dp" app:cardElevation="0dp">
+                        <Spinner android:id="@+id/spinnerWholesaleFuel"
+                            android:layout_width="match_parent" android:layout_height="52dp"
+                            android:paddingStart="12dp" android:popupBackground="#161B22"/>
+                    </androidx.cardview.widget.CardView>
+                    <TextView android:id="@+id/tvNormativeRef" android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:text="Cargando referencia..."
+                        android:textSize="12sp" android:textColor="#42A5F5"
+                        android:layout_marginBottom="4dp"/>
+                    <TextView android:id="@+id/tvMarginInfo" android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:textSize="11sp"
+                        android:textColor="#78909C" android:layout_marginBottom="14dp"
+                        android:lineSpacingExtra="3dp"/>
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:hint="Precio mayorista por galon (COP)"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        app:boxBackgroundColor="#1E2A3A" app:boxStrokeColor="#2C3E50"
+                        app:hintTextColor="#B0BEC5" android:layout_marginBottom="16dp">
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etWholesalePrice" android:layout_width="match_parent"
+                            android:layout_height="wrap_content" android:inputType="numberDecimal"
+                            android:textColor="#FFFFFF"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnGuardarWholesale" android:layout_width="match_parent"
+                        android:layout_height="52dp" android:text="Guardar precio mayorista"
+                        android:textAllCaps="false" android:textSize="15sp"
+                        app:cornerRadius="12dp" app:backgroundTint="#FF8F00"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="Historial de precios mayoristas" android:textSize="13sp"
+                android:textColor="#B0BEC5" android:textAllCaps="true"
+                android:layout_marginStart="20dp" android:layout_marginTop="8dp"
+                android:layout_marginBottom="10dp"/>
+            <androidx.recyclerview.widget.RecyclerView android:id="@+id/recyclerWholesale"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"/>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
