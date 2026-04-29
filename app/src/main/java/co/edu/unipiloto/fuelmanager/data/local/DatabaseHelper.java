@@ -358,7 +358,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         v.put(COL_VEHICLE_TYPE, user.getVehicleType()); // puede ser null
         v.put(COL_CREATED_AT, new java.util.Date().toString());
         long id = db.insert(TABLE_USERS, null, v);
-        db.close(); return id;
+        return id;
     }
 
     public long insertUserWithStation(User user, Station station) {
@@ -381,7 +381,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             sv.put(COL_USER_ID, userId);
             db.insert(TABLE_STATIONS, null, sv);
             db.setTransactionSuccessful();
-        } finally { db.endTransaction(); db.close(); }
+        } finally { db.endTransaction();  }
         return userId;
     }
 
@@ -393,7 +393,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 null, null, null);
         User user = null;
         if (c != null && c.moveToFirst()) { user = cursorToUser(c); c.close(); }
-        db.close(); return user;
+        return user;
     }
 
     public boolean emailExists(String email) {
@@ -402,7 +402,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COL_EMAIL + "=?", new String[]{email.toLowerCase().trim()},
                 null, null, null);
         boolean exists = c != null && c.getCount() > 0;
-        if (c != null) c.close(); db.close(); return exists;
+        if (c != null) c.close();  return exists;
     }
 
     private User cursorToUser(Cursor c) {
@@ -425,7 +425,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         List<Station> list = new ArrayList<>(); SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.query(TABLE_STATIONS, null, null, null, null, null, COL_PRICE_CORRIENTE + " ASC");
         if (c != null) { while (c.moveToNext()) list.add(cursorToStation(c)); c.close(); }
-        db.close(); return list;
+        return list;
     }
     public List<Station> getAllStationsSimple() { return getAllStations(); }
 
@@ -434,7 +434,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor c = db.query(TABLE_STATIONS, null, COL_ZONE + "=?", new String[]{zone},
                 null, null, COL_PRICE_CORRIENTE + " ASC");
         if (c != null) { while (c.moveToNext()) list.add(cursorToStation(c)); c.close(); }
-        db.close(); return list;
+        return list;
     }
 
     public Station getStationById(int stationId) {
@@ -443,7 +443,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 new String[]{String.valueOf(stationId)}, null, null, null);
         Station s = null;
         if (c != null && c.moveToFirst()) { s = cursorToStation(c); c.close(); }
-        db.close(); return s;
+        return s;
     }
 
     public int getStationIdByUserId(int userId) {
@@ -452,14 +452,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COL_USER_ID + "=?", new String[]{String.valueOf(userId)},
                 null, null, null);
         if (c != null && c.moveToFirst()) { stationId = c.getInt(0); c.close(); }
-        db.close(); return stationId;
+        return stationId;
     }
 
     public boolean updateStationPrices(int stationId, double corriente, double extra, double acpm) {
         SQLiteDatabase db = getWritableDatabase(); ContentValues v = new ContentValues();
         v.put(COL_PRICE_CORRIENTE, corriente); v.put(COL_PRICE_EXTRA, extra); v.put(COL_PRICE_ACPM, acpm);
         int rows = db.update(TABLE_STATIONS, v, COL_ID + "=?", new String[]{String.valueOf(stationId)});
-        db.close(); return rows > 0;
+        return rows > 0;
     }
 
     private Station cursorToStation(Cursor c) {
@@ -484,7 +484,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         v.put(COL_INV_FUEL_TYPE, fuelType); v.put(COL_INV_MOV_TYPE, movType);
         v.put(COL_INV_VOLUME, volume); v.put(COL_INV_NOTE, note);
         v.put(COL_INV_DATE, date); v.put(COL_INV_STATION_ID, stationId);
-        long id = db.insert(TABLE_INVENTORY, null, v); db.close(); return id;
+        long id = db.insert(TABLE_INVENTORY, null, v);  return id;
     }
 
     public List<co.edu.unipiloto.fuelmanager.data.model.InventoryMovement> getMovementsByStation(int stationId) {
@@ -493,7 +493,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor c = db.query(TABLE_INVENTORY, null, COL_INV_STATION_ID + "=?",
                 new String[]{String.valueOf(stationId)}, null, null, COL_ID + " DESC");
         if (c != null) { while (c.moveToNext()) list.add(cursorToMovement(c)); c.close(); }
-        db.close(); return list;
+        return list;
     }
 
     public co.edu.unipiloto.fuelmanager.data.model.InventoryStock getStockByStation(int stationId) {
@@ -533,7 +533,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         v.put(COL_NP_FUEL_TYPE, price.getFuelType()); v.put(COL_NP_PRICE, price.getPricePerGallon());
         v.put(COL_NP_CITY, "BOGOTA"); v.put(COL_NP_DATE, price.getEffectiveDate());
         v.put(COL_NORM_SOURCE, price.getSource());
-        long id = db.insert(TABLE_NORMATIVE_PRICES, null, v); db.close(); return id;
+        long id = db.insert(TABLE_NORMATIVE_PRICES, null, v);  return id;
     }
 
     public List<NormativePrice> getNormativePrices() {
@@ -548,11 +548,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             p.setSource(c.getString(c.getColumnIndexOrThrow(COL_NORM_SOURCE)));
             list.add(p);
         } while (c.moveToNext()); }
-        c.close(); db.close(); return list;
+        c.close();  return list;
     }
 
     public void clearNormativePrices() {
-        SQLiteDatabase db = getWritableDatabase(); db.delete(TABLE_NORMATIVE_PRICES, null, null); db.close();
+        SQLiteDatabase db = getWritableDatabase(); db.delete(TABLE_NORMATIVE_PRICES, null, null);
     }
 
     // ════════════════════════════════════════════════════════
@@ -565,7 +565,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         v.put(COL_SALE_PRICE_GAL, sale.getPricePerGal()); v.put(COL_SALE_TOTAL, sale.getTotalPrice());
         v.put(COL_SALE_PLATE, sale.getClientPlate()); v.put(COL_SALE_DATE, sale.getDate());
         v.put(COL_SALE_STATION_ID, sale.getStationId());
-        long id = db.insert(TABLE_SALES, null, v); db.close(); return id;
+        long id = db.insert(TABLE_SALES, null, v);  return id;
     }
 
     public List<FuelSale> getSales(int stationId) {
@@ -573,14 +573,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor c = db.query(TABLE_SALES, null, COL_SALE_STATION_ID + "=?",
                 new String[]{String.valueOf(stationId)}, null, null, COL_ID + " DESC");
         if (c != null) { while (c.moveToNext()) list.add(cursorToSale(c)); c.close(); }
-        db.close(); return list;
+        return list;
     }
 
     public List<FuelSale> getAllSales() {
         List<FuelSale> list = new ArrayList<>(); SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.query(TABLE_SALES, null, null, null, null, null, COL_ID + " DESC");
         if (c != null) { while (c.moveToNext()) list.add(cursorToSale(c)); c.close(); }
-        db.close(); return list;
+        return list;
     }
 
     private FuelSale cursorToSale(Cursor c) {
@@ -606,14 +606,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         v.put(COL_AL_FUEL_TYPE, alert.getFuelType()); v.put(COL_AL_LAST_PRICE, alert.getLastKnownPrice());
         v.put(COL_AL_ACTIVE, 1); v.put(COL_AL_USER_ID, alert.getUserId());
         long id = db.insertWithOnConflict(TABLE_ALERTS, null, v, SQLiteDatabase.CONFLICT_REPLACE);
-        db.close(); return id;
+        return id;
     }
 
     public void deactivateAlert(int stationId, String fuelType, int userId) {
         SQLiteDatabase db = getWritableDatabase(); ContentValues v = new ContentValues(); v.put(COL_AL_ACTIVE, 0);
         db.update(TABLE_ALERTS, v, COL_AL_STATION_ID + "=? AND " + COL_AL_FUEL_TYPE + "=? AND " + COL_AL_USER_ID + "=?",
                 new String[]{String.valueOf(stationId), fuelType, String.valueOf(userId)});
-        db.close();
+
     }
 
     public boolean isAlertActive(int stationId, String fuelType, int userId) {
@@ -621,7 +621,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor c = db.query(TABLE_ALERTS, new String[]{COL_AL_ACTIVE},
                 COL_AL_STATION_ID + "=? AND " + COL_AL_FUEL_TYPE + "=? AND " + COL_AL_USER_ID + "=? AND " + COL_AL_ACTIVE + "=1",
                 new String[]{String.valueOf(stationId), fuelType, String.valueOf(userId)}, null, null, null);
-        boolean active = c != null && c.getCount() > 0; if (c != null) c.close(); db.close(); return active;
+        boolean active = c != null && c.getCount() > 0; if (c != null) c.close();  return active;
     }
 
     public List<PriceAlert> getActiveAlerts(int userId) {
@@ -629,7 +629,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor c = db.query(TABLE_ALERTS, null, COL_AL_USER_ID + "=? AND " + COL_AL_ACTIVE + "=1",
                 new String[]{String.valueOf(userId)}, null, null, COL_AL_STATION_NAME + " ASC");
         if (c != null) { while (c.moveToNext()) list.add(cursorToAlert(c)); c.close(); }
-        db.close(); return list;
+        return list;
     }
 
     public List<PriceAlert> checkPriceChanges(int userId) {
@@ -651,13 +651,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 c.close();
             }
         }
-        db.close();
+
         for (PriceAlert a : changed) {
             SQLiteDatabase wdb = getWritableDatabase(); ContentValues v = new ContentValues();
             v.put(COL_AL_LAST_PRICE, a.getLastKnownPrice());
             wdb.update(TABLE_ALERTS, v, COL_AL_STATION_ID + "=? AND " + COL_AL_FUEL_TYPE + "=? AND " + COL_AL_USER_ID + "=?",
                     new String[]{String.valueOf(a.getStationId()), a.getFuelType(), String.valueOf(a.getUserId())});
-            wdb.close();
+
         }
         return changed;
     }
@@ -684,7 +684,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         v.put(COL_DL_FUEL_TYPE, delivery.getFuelType()); v.put(COL_DL_VOLUME, delivery.getVolumeGal());
         v.put(COL_DL_DATE, now); v.put(COL_DL_NOTES, delivery.getNotes());
         v.put(COL_DL_DISTRIBUTOR_ID, delivery.getDistributorId());
-        long deliveryId = db.insert(TABLE_DELIVERIES, null, v); db.close();
+        long deliveryId = db.insert(TABLE_DELIVERIES, null, v);
         String note = "Entrega #" + deliveryId + " · Distribuidor";
         if (delivery.getNotes() != null && !delivery.getNotes().isEmpty()) note += " · " + delivery.getNotes();
         insertInventoryMovement(delivery.getFuelType(), "ENTRADA", delivery.getVolumeGal(), note, now, delivery.getStationId());
@@ -696,14 +696,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor c = db.query(TABLE_DELIVERIES, null, COL_DL_DISTRIBUTOR_ID + "=?",
                 new String[]{String.valueOf(distributorId)}, null, null, COL_ID + " DESC");
         if (c != null) { while (c.moveToNext()) list.add(cursorToDelivery(c)); c.close(); }
-        db.close(); return list;
+        return list;
     }
 
     public List<Delivery> getAllDeliveries() {
         List<Delivery> list = new ArrayList<>(); SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.query(TABLE_DELIVERIES, null, null, null, null, null, COL_ID + " DESC");
         if (c != null) { while (c.moveToNext()) list.add(cursorToDelivery(c)); c.close(); }
-        db.close(); return list;
+        return list;
     }
 
     private Delivery cursorToDelivery(Cursor c) {
@@ -730,7 +730,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         v.put(COL_PU_OLD_EXT, pu.getOldExtra());     v.put(COL_PU_NEW_EXT, pu.getNewExtra());
         v.put(COL_PU_OLD_ACPM, pu.getOldAcpm());     v.put(COL_PU_NEW_ACPM, pu.getNewAcpm());
         v.put(COL_PU_DATE, pu.getDate());             v.put(COL_PU_DIST_ID, pu.getDistributorId());
-        long id = db.insert(TABLE_PRICE_UPDATES, null, v); db.close(); return id;
+        long id = db.insert(TABLE_PRICE_UPDATES, null, v);  return id;
     }
 
     public List<PriceUpdate> getAllPriceUpdates() {
@@ -751,7 +751,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             pu.setDistributorId(c.getInt(c.getColumnIndexOrThrow(COL_PU_DIST_ID)));
             list.add(pu);
         } c.close(); }
-        db.close(); return list;
+        return list;
     }
 
     // ════════════════════════════════════════════════════════
@@ -765,7 +765,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         v.put(COL_SUB_START, s.getStartDate()); v.put(COL_SUB_END, s.getEndDate());
         v.put(COL_SUB_NOTES, s.getNotes()); v.put(COL_SUB_ACTIVE, s.isActive() ? 1 : 0);
         v.put(COL_SUB_AUTH_ID, s.getAuthorityId());
-        long id = db.insert(TABLE_SUBSIDIES, null, v); db.close(); return id;
+        long id = db.insert(TABLE_SUBSIDIES, null, v);  return id;
     }
 
     public List<Subsidy> getAllSubsidies() {
@@ -785,12 +785,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             s.setAuthorityId(c.getInt(c.getColumnIndexOrThrow(COL_SUB_AUTH_ID)));
             list.add(s);
         } c.close(); }
-        db.close(); return list;
+        return list;
     }
 
     public void deactivateSubsidy(int subsidyId) {
         SQLiteDatabase db = getWritableDatabase(); ContentValues v = new ContentValues(); v.put(COL_SUB_ACTIVE, 0);
-        db.update(TABLE_SUBSIDIES, v, COL_ID + "=?", new String[]{String.valueOf(subsidyId)}); db.close();
+        db.update(TABLE_SUBSIDIES, v, COL_ID + "=?", new String[]{String.valueOf(subsidyId)});
     }
 
     public List<User> getUsersByRole(String role) {
@@ -803,7 +803,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             while (c.moveToNext()) list.add(cursorToUser(c));
             c.close();
         }
-        db.close();
+
         return list;
     }
 
@@ -813,50 +813,50 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
 
-     public Subsidy getActiveSubsidyForUser(String targetValue, String fuelType) {
-     SQLiteDatabase db = getReadableDatabase();
-     // Busca subsidio activo para ese value y ese combustible (o TODOS)
-     Cursor c = db.query(TABLE_SUBSIDIES, null,
-     COL_SUB_TARGET_VALUE + "=? AND (" +
-     COL_SUB_FUEL_TYPE + "=? OR " + COL_SUB_FUEL_TYPE + "='TODOS') AND " +
-     COL_SUB_ACTIVE + "=1",
-     new String[]{targetValue, fuelType},
-     null, null, COL_ID + " DESC", "1");
-     Subsidy s = null;
-     if (c != null && c.moveToFirst()) { s = cursorToSubsidy(c); c.close(); }
-     db.close();
-     return s;
-     }
+    public Subsidy getActiveSubsidyForUser(String targetValue, String fuelType) {
+        SQLiteDatabase db = getReadableDatabase();
+        // Busca subsidio activo para ese value y ese combustible (o TODOS)
+        Cursor c = db.query(TABLE_SUBSIDIES, null,
+                COL_SUB_TARGET_VALUE + "=? AND (" +
+                        COL_SUB_FUEL_TYPE + "=? OR " + COL_SUB_FUEL_TYPE + "='TODOS') AND " +
+                        COL_SUB_ACTIVE + "=1",
+                new String[]{targetValue, fuelType},
+                null, null, COL_ID + " DESC", "1");
+        Subsidy s = null;
+        if (c != null && c.moveToFirst()) { s = cursorToSubsidy(c); c.close(); }
 
-     public Subsidy getActiveSubsidyByZone(String zone, String fuelType) {
-     SQLiteDatabase db = getReadableDatabase();
-     Cursor c = db.query(TABLE_SUBSIDIES, null,
-     COL_SUB_TARGET_TYPE + "='REGION' AND " +
-     COL_SUB_TARGET_VALUE + "=? AND (" +
-     COL_SUB_FUEL_TYPE + "=? OR " + COL_SUB_FUEL_TYPE + "='TODOS') AND " +
-     COL_SUB_ACTIVE + "=1",
-     new String[]{zone, fuelType},
-     null, null, COL_ID + " DESC", "1");
-     Subsidy s = null;
-     if (c != null && c.moveToFirst()) { s = cursorToSubsidy(c); c.close(); }
-     db.close();
-     return s;
-     }
+        return s;
+    }
 
-     private Subsidy cursorToSubsidy(Cursor c) {
-     Subsidy s = new Subsidy();
-     s.setId(c.getInt(c.getColumnIndexOrThrow(COL_ID)));
-     s.setTargetType(c.getString(c.getColumnIndexOrThrow(COL_SUB_TARGET_TYPE)));
-     s.setTargetValue(c.getString(c.getColumnIndexOrThrow(COL_SUB_TARGET_VALUE)));
-     s.setFuelType(c.getString(c.getColumnIndexOrThrow(COL_SUB_FUEL_TYPE)));
-     s.setDiscountPct(c.getDouble(c.getColumnIndexOrThrow(COL_SUB_DISCOUNT_PCT)));
-     s.setStartDate(c.getString(c.getColumnIndexOrThrow(COL_SUB_START)));
-     s.setEndDate(c.getString(c.getColumnIndexOrThrow(COL_SUB_END)));
-     s.setNotes(c.getString(c.getColumnIndexOrThrow(COL_SUB_NOTES)));
-     s.setActive(c.getInt(c.getColumnIndexOrThrow(COL_SUB_ACTIVE)) == 1);
-     s.setAuthorityId(c.getInt(c.getColumnIndexOrThrow(COL_SUB_AUTH_ID)));
-     return s;
-     }
+    public Subsidy getActiveSubsidyByZone(String zone, String fuelType) {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.query(TABLE_SUBSIDIES, null,
+                COL_SUB_TARGET_TYPE + "='REGION' AND " +
+                        COL_SUB_TARGET_VALUE + "=? AND (" +
+                        COL_SUB_FUEL_TYPE + "=? OR " + COL_SUB_FUEL_TYPE + "='TODOS') AND " +
+                        COL_SUB_ACTIVE + "=1",
+                new String[]{zone, fuelType},
+                null, null, COL_ID + " DESC", "1");
+        Subsidy s = null;
+        if (c != null && c.moveToFirst()) { s = cursorToSubsidy(c); c.close(); }
+
+        return s;
+    }
+
+    private Subsidy cursorToSubsidy(Cursor c) {
+        Subsidy s = new Subsidy();
+        s.setId(c.getInt(c.getColumnIndexOrThrow(COL_ID)));
+        s.setTargetType(c.getString(c.getColumnIndexOrThrow(COL_SUB_TARGET_TYPE)));
+        s.setTargetValue(c.getString(c.getColumnIndexOrThrow(COL_SUB_TARGET_VALUE)));
+        s.setFuelType(c.getString(c.getColumnIndexOrThrow(COL_SUB_FUEL_TYPE)));
+        s.setDiscountPct(c.getDouble(c.getColumnIndexOrThrow(COL_SUB_DISCOUNT_PCT)));
+        s.setStartDate(c.getString(c.getColumnIndexOrThrow(COL_SUB_START)));
+        s.setEndDate(c.getString(c.getColumnIndexOrThrow(COL_SUB_END)));
+        s.setNotes(c.getString(c.getColumnIndexOrThrow(COL_SUB_NOTES)));
+        s.setActive(c.getInt(c.getColumnIndexOrThrow(COL_SUB_ACTIVE)) == 1);
+        s.setAuthorityId(c.getInt(c.getColumnIndexOrThrow(COL_SUB_AUTH_ID)));
+        return s;
+    }
 
     // ════════════════════════════════════════════════════════
     //  RECIBOS (HU-12)
@@ -870,7 +870,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         v.put(COL_REC_VOLUME, volume); v.put(COL_REC_PRICE_GAL, pricePerGal);
         v.put(COL_REC_TOTAL, total); v.put(COL_REC_PLATE, plate);
         v.put(COL_REC_DATE, date); v.put(COL_REC_STATION_ID, stationId);
-        long id = db.insert(TABLE_RECEIPTS, null, v); db.close(); return id;
+        long id = db.insert(TABLE_RECEIPTS, null, v);  return id;
     }
 
     public List<Receipt> getReceiptsByStation(int stationId) {
@@ -878,14 +878,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor c = db.query(TABLE_RECEIPTS, null, COL_REC_STATION_ID + "=?",
                 new String[]{String.valueOf(stationId)}, null, null, COL_ID + " DESC");
         if (c != null) { while (c.moveToNext()) list.add(cursorToReceipt(c)); c.close(); }
-        db.close(); return list;
+        return list;
     }
 
     public List<Receipt> getAllReceipts() {
         List<Receipt> list = new ArrayList<>(); SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.query(TABLE_RECEIPTS, null, null, null, null, null, COL_ID + " DESC");
         if (c != null) { while (c.moveToNext()) list.add(cursorToReceipt(c)); c.close(); }
-        db.close(); return list;
+        return list;
     }
 
     public Receipt getReceiptBySaleId(long saleId) {
@@ -894,7 +894,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 new String[]{String.valueOf(saleId)}, null, null, null);
         Receipt r = null;
         if (c != null && c.moveToFirst()) { r = cursorToReceipt(c); c.close(); }
-        db.close(); return r;
+        return r;
     }
 
     private Receipt cursorToReceipt(Cursor c) {
@@ -927,7 +927,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         v.put(COL_WS_PRICE,        wp.getPricePerGallon());
         v.put(COL_WS_DATE,         wp.getEffectiveDate());
         v.put(COL_WS_DIST_ID,      wp.getDistributorId());
-        long id = db.insert(TABLE_WHOLESALE, null, v); db.close(); return id;
+        long id = db.insert(TABLE_WHOLESALE, null, v);  return id;
     }
 
     /** Precio mayorista vigente más reciente para una estación + combustible. */
@@ -939,7 +939,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 null, null, COL_ID + " DESC", "1");
         WholesalePrice wp = null;
         if (c != null && c.moveToFirst()) { wp = cursorToWholesale(c); c.close(); }
-        db.close(); return wp;
+        return wp;
     }
 
     /** Todos los precios mayoristas definidos por un distribuidor. */
@@ -948,7 +948,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor c = db.query(TABLE_WHOLESALE, null, COL_WS_DIST_ID + "=?",
                 new String[]{String.valueOf(distributorId)}, null, null, COL_ID + " DESC");
         if (c != null) { while (c.moveToNext()) list.add(cursorToWholesale(c)); c.close(); }
-        db.close(); return list;
+        return list;
     }
 
     /** Todos los precios mayoristas del sistema (para reportes y autoridad). */
@@ -956,7 +956,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         List<WholesalePrice> list = new ArrayList<>(); SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.query(TABLE_WHOLESALE, null, null, null, null, null, COL_ID + " DESC");
         if (c != null) { while (c.moveToNext()) list.add(cursorToWholesale(c)); c.close(); }
-        db.close(); return list;
+        return list;
     }
 
     private WholesalePrice cursorToWholesale(Cursor c) {
