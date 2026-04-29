@@ -1,159 +1,345 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    android:background="#0D1117" android:fillViewport="true">
-    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:orientation="vertical" android:padding="24dp">
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:orientation="horizontal" android:gravity="center_vertical"
-            android:layout_marginBottom="28dp">
-            <ImageButton android:id="@+id/btnBack" android:layout_width="38dp" android:layout_height="38dp"
-                android:src="@drawable/ic_arrow_back" android:background="@drawable/bg_icon_btn"
-                android:tint="#FFFFFF" android:contentDescription="Volver"/>
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:text="Crear cuenta" android:textSize="22sp" android:textColor="#FFFFFF"
-                android:textStyle="bold" android:layout_marginStart="14dp"/>
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0D1117"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="28dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/btnBack"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:background="@drawable/bg_icon_btn"
+                android:contentDescription="Volver"
+                android:src="@drawable/ic_arrow_back"
+                android:tint="#FFFFFF" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="14dp"
+                android:text="Crear cuenta"
+                android:textColor="#FFFFFF"
+                android:textSize="22sp"
+                android:textStyle="bold" />
         </LinearLayout>
-        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:hint="Nombre completo"
+
+        <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            app:boxBackgroundColor="#1E2A3A" app:boxStrokeColor="#2C3E50"
-            app:hintTextColor="#B0BEC5" android:layout_marginBottom="14dp">
-            <com.google.android.material.textfield.TextInputEditText android:id="@+id/etName"
-                android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:inputType="textPersonName" android:textColor="#FFFFFF"/>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="14dp"
+            android:hint="Nombre completo"
+            app:boxBackgroundColor="#1E2A3A"
+            app:boxStrokeColor="#2C3E50"
+            app:hintTextColor="#B0BEC5">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:textColor="#FFFFFF" />
         </com.google.android.material.textfield.TextInputLayout>
-        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:hint="Correo electronico"
+
+        <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            app:boxBackgroundColor="#1E2A3A" app:boxStrokeColor="#2C3E50"
-            app:hintTextColor="#B0BEC5" android:layout_marginBottom="14dp">
-            <com.google.android.material.textfield.TextInputEditText android:id="@+id/etEmail"
-                android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:inputType="textEmailAddress" android:textColor="#FFFFFF"/>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="14dp"
+            android:hint="Correo electronico"
+            app:boxBackgroundColor="#1E2A3A"
+            app:boxStrokeColor="#2C3E50"
+            app:hintTextColor="#B0BEC5">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
+                android:textColor="#FFFFFF" />
         </com.google.android.material.textfield.TextInputLayout>
-        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:hint="Contrasena"
+
+        <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            app:boxBackgroundColor="#1E2A3A" app:boxStrokeColor="#2C3E50"
-            app:hintTextColor="#B0BEC5" app:passwordToggleEnabled="true"
-            android:layout_marginBottom="14dp">
-            <com.google.android.material.textfield.TextInputEditText android:id="@+id/etPassword"
-                android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:inputType="textPassword" android:textColor="#FFFFFF"/>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="14dp"
+            android:hint="Contrasena"
+            app:boxBackgroundColor="#1E2A3A"
+            app:boxStrokeColor="#2C3E50"
+            app:hintTextColor="#B0BEC5"
+            app:passwordToggleEnabled="true">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:textColor="#FFFFFF" />
         </com.google.android.material.textfield.TextInputLayout>
-        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:hint="Confirmar contrasena"
+
+        <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            app:boxBackgroundColor="#1E2A3A" app:boxStrokeColor="#2C3E50"
-            app:hintTextColor="#B0BEC5" app:passwordToggleEnabled="true"
-            android:layout_marginBottom="14dp">
-            <com.google.android.material.textfield.TextInputEditText android:id="@+id/etConfirmPassword"
-                android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:inputType="textPassword" android:textColor="#FFFFFF"/>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="14dp"
+            android:hint="Confirmar contrasena"
+            app:boxBackgroundColor="#1E2A3A"
+            app:boxStrokeColor="#2C3E50"
+            app:hintTextColor="#B0BEC5"
+            app:passwordToggleEnabled="true">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etConfirmPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:textColor="#FFFFFF" />
         </com.google.android.material.textfield.TextInputLayout>
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:text="Tipo de cuenta" android:textSize="12sp" android:textColor="#B0BEC5"
-            android:layout_marginBottom="6dp"/>
-        <androidx.cardview.widget.CardView android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:layout_marginBottom="20dp"
-            app:cardBackgroundColor="#1E2A3A" app:cardCornerRadius="12dp" app:cardElevation="0dp">
-            <Spinner android:id="@+id/spinnerRole" android:layout_width="match_parent"
-                android:layout_height="52dp" android:paddingStart="12dp" android:popupBackground="#161B22"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp"
+            android:text="Tipo de cuenta"
+            android:textColor="#B0BEC5"
+            android:textSize="12sp" />
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            app:cardBackgroundColor="#1E2A3A"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="0dp">
+
+            <Spinner
+                android:id="@+id/spinnerRole"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:paddingStart="12dp"
+                android:popupBackground="#161B22" />
         </androidx.cardview.widget.CardView>
         <!-- Seccion vehiculo solo CLIENTE -->
-        <LinearLayout android:id="@+id/sectionVehicle" android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:orientation="vertical"
+        <LinearLayout
+            android:id="@+id/sectionVehicle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:visibility="visible">
-            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:orientation="horizontal" android:gravity="center_vertical"
-                android:layout_marginBottom="16dp">
-                <View android:layout_width="0dp" android:layout_height="1dp"
-                    android:layout_weight="1" android:background="#2C3E50"/>
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:text="  Tipo de vehiculo  " android:textSize="11sp"
-                    android:textColor="#E65100" android:textAllCaps="true" android:letterSpacing="0.06"/>
-                <View android:layout_width="0dp" android:layout_height="1dp"
-                    android:layout_weight="1" android:background="#2C3E50"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"
+                    android:background="#2C3E50" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:letterSpacing="0.06"
+                    android:text="  Tipo de vehiculo  "
+                    android:textAllCaps="true"
+                    android:textColor="#E65100"
+                    android:textSize="11sp" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"
+                    android:background="#2C3E50" />
             </LinearLayout>
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:text="Tu tipo de vehiculo" android:textSize="12sp"
-                android:textColor="#B0BEC5" android:layout_marginBottom="6dp"/>
-            <androidx.cardview.widget.CardView android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:layout_marginBottom="20dp"
-                app:cardBackgroundColor="#1E2A3A" app:cardCornerRadius="12dp" app:cardElevation="0dp">
-                <Spinner android:id="@+id/spinnerVehicle" android:layout_width="match_parent"
-                    android:layout_height="52dp" android:paddingStart="12dp" android:popupBackground="#161B22"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"
+                android:text="Tu tipo de vehiculo"
+                android:textColor="#B0BEC5"
+                android:textSize="12sp" />
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                app:cardBackgroundColor="#1E2A3A"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp">
+
+                <Spinner
+                    android:id="@+id/spinnerVehicle"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:paddingStart="12dp"
+                    android:popupBackground="#161B22" />
             </androidx.cardview.widget.CardView>
         </LinearLayout>
         <!-- Seccion estacion solo ESTACION -->
-        <LinearLayout android:id="@+id/sectionStation" android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:orientation="vertical"
+        <LinearLayout
+            android:id="@+id/sectionStation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:visibility="gone">
-            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:orientation="horizontal" android:gravity="center_vertical"
-                android:layout_marginBottom="16dp">
-                <View android:layout_width="0dp" android:layout_height="1dp"
-                    android:layout_weight="1" android:background="#2C3E50"/>
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:text="  Datos de la estacion  " android:textSize="11sp"
-                    android:textColor="#E65100" android:textAllCaps="true" android:letterSpacing="0.06"/>
-                <View android:layout_width="0dp" android:layout_height="1dp"
-                    android:layout_weight="1" android:background="#2C3E50"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"
+                    android:background="#2C3E50" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:letterSpacing="0.06"
+                    android:text="  Datos de la estacion  "
+                    android:textAllCaps="true"
+                    android:textColor="#E65100"
+                    android:textSize="11sp" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"
+                    android:background="#2C3E50" />
             </LinearLayout>
-            <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:hint="Direccion de la estacion"
+
+            <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                app:boxBackgroundColor="#1E2A3A" app:boxStrokeColor="#2C3E50"
-                app:hintTextColor="#B0BEC5" android:layout_marginBottom="14dp">
-                <com.google.android.material.textfield.TextInputEditText android:id="@+id/etStationAddress"
-                    android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:inputType="textPostalAddress" android:textColor="#FFFFFF"/>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="14dp"
+                android:hint="Direccion de la estacion"
+                app:boxBackgroundColor="#1E2A3A"
+                app:boxStrokeColor="#2C3E50"
+                app:hintTextColor="#B0BEC5">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etStationAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPostalAddress"
+                    android:textColor="#FFFFFF" />
             </com.google.android.material.textfield.TextInputLayout>
-            <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:hint="Zona (ej: Bogota Norte)"
+
+            <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                app:boxBackgroundColor="#1E2A3A" app:boxStrokeColor="#2C3E50"
-                app:hintTextColor="#B0BEC5" android:layout_marginBottom="14dp">
-                <com.google.android.material.textfield.TextInputEditText android:id="@+id/etStationZone"
-                    android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:textColor="#FFFFFF"/>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="14dp"
+                android:hint="Zona (ej: Bogota Norte)"
+                app:boxBackgroundColor="#1E2A3A"
+                app:boxStrokeColor="#2C3E50"
+                app:hintTextColor="#B0BEC5">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etStationZone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#FFFFFF" />
             </com.google.android.material.textfield.TextInputLayout>
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:text="Precios por galon (COP)" android:textSize="12sp"
-                android:textColor="#B0BEC5" android:layout_marginBottom="10dp"/>
-            <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:hint="Corriente"
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="Precios por galon (COP)"
+                android:textColor="#B0BEC5"
+                android:textSize="12sp" />
+
+            <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                app:boxBackgroundColor="#1E2A3A" app:boxStrokeColor="#2C3E50"
-                app:hintTextColor="#B0BEC5" android:layout_marginBottom="10dp">
-                <com.google.android.material.textfield.TextInputEditText android:id="@+id/etPriceCorriente"
-                    android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:inputType="numberDecimal" android:textColor="#FFFFFF"/>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:hint="Corriente"
+                app:boxBackgroundColor="#1E2A3A"
+                app:boxStrokeColor="#2C3E50"
+                app:hintTextColor="#B0BEC5">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etPriceCorriente"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
+                    android:textColor="#FFFFFF" />
             </com.google.android.material.textfield.TextInputLayout>
-            <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:hint="Extra"
+
+            <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                app:boxBackgroundColor="#1E2A3A" app:boxStrokeColor="#2C3E50"
-                app:hintTextColor="#B0BEC5" android:layout_marginBottom="10dp">
-                <com.google.android.material.textfield.TextInputEditText android:id="@+id/etPriceExtra"
-                    android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:inputType="numberDecimal" android:textColor="#FFFFFF"/>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:hint="Extra"
+                app:boxBackgroundColor="#1E2A3A"
+                app:boxStrokeColor="#2C3E50"
+                app:hintTextColor="#B0BEC5">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etPriceExtra"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
+                    android:textColor="#FFFFFF" />
             </com.google.android.material.textfield.TextInputLayout>
-            <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:hint="ACPM"
+
+            <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                app:boxBackgroundColor="#1E2A3A" app:boxStrokeColor="#2C3E50"
-                app:hintTextColor="#B0BEC5" android:layout_marginBottom="20dp">
-                <com.google.android.material.textfield.TextInputEditText android:id="@+id/etPriceAcpm"
-                    android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:inputType="numberDecimal" android:textColor="#FFFFFF"/>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:hint="ACPM"
+                app:boxBackgroundColor="#1E2A3A"
+                app:boxStrokeColor="#2C3E50"
+                app:hintTextColor="#B0BEC5">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etPriceAcpm"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
+                    android:textColor="#FFFFFF" />
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
-        <com.google.android.material.button.MaterialButton android:id="@+id/btnRegister"
-            android:layout_width="match_parent" android:layout_height="52dp"
-            android:text="Crear cuenta" android:textAllCaps="false" android:textSize="16sp"
-            android:textStyle="bold" app:cornerRadius="14dp" app:backgroundTint="#E65100"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnRegister"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="Crear cuenta"
+            android:textAllCaps="false"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:backgroundTint="#E65100"
+            app:cornerRadius="14dp" />
     </LinearLayout>
 </ScrollView>

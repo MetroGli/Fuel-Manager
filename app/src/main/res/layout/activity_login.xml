@@ -12,8 +12,7 @@
         android:layout_height="wrap_content"
         android:minHeight="700dp"
         android:padding="28dp">
-
-        <!-- Decoración superior naranja -->
+        
         <View
             android:id="@+id/decorTop"
             android:layout_width="180dp"
@@ -25,7 +24,6 @@
             android:layout_marginTop="-40dp"
             android:layout_marginEnd="-40dp"/>
 
-        <!-- Icono fuel -->
         <ImageView
             android:id="@+id/ivIcon"
             android:layout_width="64dp"
@@ -35,7 +33,6 @@
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginTop="40dp"/>
 
-        <!-- Título -->
         <TextView
             android:id="@+id/tvTitle"
             android:layout_width="0dp"
@@ -49,7 +46,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="20dp"/>
 
-        <!-- Subtítulo -->
         <TextView
             android:id="@+id/tvSubtitle"
             android:layout_width="0dp"
@@ -62,7 +58,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 
-        <!-- Separador -->
         <View
             android:id="@+id/divider"
             android:layout_width="48dp"
@@ -72,7 +67,6 @@
             app:layout_constraintTop_toBottomOf="@id/tvSubtitle"
             app:layout_constraintStart_toStartOf="parent"/>
 
-        <!-- Card contenedor del formulario -->
         <androidx.cardview.widget.CardView
             android:id="@+id/cardForm"
             android:layout_width="0dp"
@@ -91,7 +85,6 @@
                 android:orientation="vertical"
                 android:padding="24dp">
 
-                <!-- Email -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/tilEmail"
                     style="@style/Widget.FuelManager.TextInputLayout"
@@ -110,7 +103,6 @@
                         android:imeOptions="actionNext"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Password -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/tilPassword"
                     style="@style/Widget.FuelManager.TextInputLayout"
@@ -132,7 +124,6 @@
                         android:imeOptions="actionDone"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- ProgressBar -->
                 <ProgressBar
                     android:id="@+id/progressBar"
                     android:layout_width="match_parent"
@@ -142,7 +133,6 @@
                     android:indeterminateTint="@color/primary"
                     android:visibility="gone" />
 
-                <!-- Botón ingresar -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnLogin"
                     style="@style/Widget.FuelManager.Button"
@@ -154,7 +144,6 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Ir a registro -->
         <TextView
             android:id="@+id/tvGoRegister"
             android:layout_width="wrap_content"
@@ -168,7 +157,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 
-        <!-- Versión -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
