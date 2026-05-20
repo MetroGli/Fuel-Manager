@@ -22,7 +22,6 @@ import co.edu.unipiloto.fuelmanager.utils.Roles;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    // Campos base
     private TextInputEditText etName, etEmail, etPassword, etConfirm;
     private Spinner           spinnerRole;
     private MaterialButton    btnRegister;
@@ -127,7 +126,6 @@ public class RegisterActivity extends AppCompatActivity {
         User user = new User(0, name, email, password, selectedRole);
 
         if (selectedRole.equals(Roles.CLIENTE)) {
-            // Guardar tipo de vehículo
             user.setVehicleType(selectedVehicle);
             new Thread(() -> {
                 long id = db.insertUser(user);

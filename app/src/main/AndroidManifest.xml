@@ -3,8 +3,11 @@
     package="co.edu.unipiloto.fuelmanager">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:maxSdkVersion="28"/>
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -60,7 +63,7 @@
         <activity
             android:name=".alerts.AlertsActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".sales.SalesActivity"
@@ -73,50 +76,71 @@
             android:exported="false"
             android:screenOrientation="portrait" />
 
-        <activity android:name=".clients.DistributorHome"
+        <activity
+            android:name=".clients.DistributorHome"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".distribution.DeliveryActivity"
+        <activity
+            android:name=".distribution.DeliveryActivity"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".distribution.PriceUpdateActivity"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".report.ReportActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".clients.AuthorityHome"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".authority.PriceMonitorActivity"
+        <activity
+            android:name=".authority.PriceMonitorActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".authority.SubsidyActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"/>
-
-        <activity android:name=".authority.ReceiptHistoryActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".distribution.WholesalePriceActivity"
+        <activity
+            android:name=".authority.SubsidyActivity"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustResize" />
 
-        <activity android:name=".sales.ReceiptPdfActivity"
+        <activity
+            android:name=".authority.ReceiptHistoryActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".distribution.WholesalePriceActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".sales.ReceiptPdfActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".profile.ProfileActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBg0wMmFbfEzSvs3I_wnmpCT3I_9znuSwI"/>
+
+        <activity
+            android:name=".stations.StationMapActivity"
             android:exported="false"
             android:screenOrientation="portrait"/>
 

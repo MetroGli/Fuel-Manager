@@ -23,7 +23,7 @@ import co.edu.unipiloto.fuelmanager.data.model.WholesalePrice;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME    = "fuelmanager.db";
-    private static final int    DATABASE_VERSION = 10; // ← v10
+    private static final int    DATABASE_VERSION = 10;
 
     // ── Tabla usuarios ──────────────────────────────────────
     public static final String TABLE_USERS           = "users";
@@ -33,7 +33,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_PASSWORD          = "password";
     public static final String COL_ROLE              = "role";
     public static final String COL_CREATED_AT        = "created_at";
-    public static final String COL_VEHICLE_TYPE      = "vehicle_type"; // ← NUEVO v10
+    public static final String COL_VEHICLE_TYPE      = "vehicle_type";
 
     // ── Tabla estaciones ────────────────────────────────────
     public static final String TABLE_STATIONS        = "stations";
@@ -91,7 +91,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_DL_NOTES           = "notes";
     public static final String COL_DL_DISTRIBUTOR_ID  = "distributor_id";
 
-    // ── Tabla actualización de precios (HU-04) ──────────────
+    // ── Tabla actualización de precios  ──────────────
     public static final String TABLE_PRICE_UPDATES    = "price_updates";
     public static final String COL_PU_STATION_ID      = "station_id";
     public static final String COL_PU_STATION_NAME    = "station_name";
@@ -104,7 +104,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_PU_DATE            = "update_date";
     public static final String COL_PU_DIST_ID         = "distributor_id";
 
-    // ── Tabla subsidios (HU-11) ─────────────────────────────
+    // ── Tabla subsidios  ─────────────────────────────
     public static final String TABLE_SUBSIDIES        = "subsidies";
     public static final String COL_SUB_TARGET_TYPE    = "target_type";
     public static final String COL_SUB_TARGET_VALUE   = "target_value";
@@ -116,7 +116,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_SUB_ACTIVE         = "active";
     public static final String COL_SUB_AUTH_ID        = "authority_id";
 
-    // ── Tabla recibos (HU-12) ───────────────────────────────
+    // ── Tabla recibos  ───────────────────────────────
     public static final String TABLE_RECEIPTS         = "receipts";
     public static final String COL_REC_SALE_ID        = "sale_id";
     public static final String COL_REC_FUEL_TYPE      = "fuel_type";
@@ -127,7 +127,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_REC_DATE           = "receipt_date";
     public static final String COL_REC_STATION_ID     = "station_id";
 
-    // ── Tabla precios mayoristas (HU-13) ────────────────────
+    // ── Tabla precios mayoristas  ────────────────────
     public static final String TABLE_WHOLESALE        = "wholesale_prices";
     public static final String COL_WS_STATION_ID      = "station_id";
     public static final String COL_WS_STATION_NAME    = "station_name";
@@ -355,7 +355,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         v.put(COL_EMAIL, user.getEmail().toLowerCase().trim());
         v.put(COL_PASSWORD, PasswordUtil.hash(user.getPassword()));
         v.put(COL_ROLE, user.getRole());
-        v.put(COL_VEHICLE_TYPE, user.getVehicleType()); // puede ser null
+        v.put(COL_VEHICLE_TYPE, user.getVehicleType());
         v.put(COL_CREATED_AT, new java.util.Date().toString());
         long id = db.insert(TABLE_USERS, null, v);
         return id;
@@ -405,6 +405,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (c != null) c.close();  return exists;
     }
 
+    public boolean updateUserName(int userId, String newName) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues v = new ContentValues();
+        v.put(COL_NAME, newName.trim());
+        int rows = db.update(TABLE_USERS, v,
+                COL_ID + "=?",
+                new String[]{String.valueOf(userId)});
+        return rows > 0;
+    }
     private User cursorToUser(Cursor c) {
         User u = new User(
                 c.getInt(c.getColumnIndexOrThrow(COL_ID)),

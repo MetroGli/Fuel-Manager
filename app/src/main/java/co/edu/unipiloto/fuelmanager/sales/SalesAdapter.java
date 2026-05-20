@@ -48,7 +48,7 @@ public class SalesAdapter extends RecyclerView.Adapter<SalesAdapter.ViewHolder> 
         String date = s.getDate();
         h.tvDate.setText(date.length() > 24 ? date.substring(0, 24) : date);
 
-        // Color por tipo de combustible
+
         int color;
         switch (s.getFuelType()) {
             case "Extra": color = 0xFFFF8F00; break;

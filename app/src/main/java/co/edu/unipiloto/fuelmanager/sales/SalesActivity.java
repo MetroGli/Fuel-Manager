@@ -55,7 +55,6 @@ public class SalesActivity extends AppCompatActivity {
 
     private List<User> clientUsers   = new ArrayList<>();
     private User       selectedClient = null;
-    // CLAVE: activeSubsidy como campo de clase para que registrarVenta() lo use
     private Subsidy    activeSubsidy  = null;
 
     private static final NumberFormat COP =
@@ -280,7 +279,6 @@ public class SalesActivity extends AppCompatActivity {
         if (volume <= 0)      { etVolume.setError("Debe ser mayor a 0"); return; }
         if (pricePerGal <= 0) { etPricePerGal.setError("Debe ser mayor a 0"); return; }
 
-        // Aplicar descuento si hay subsidio activo
         final double precioFinal = (activeSubsidy != null)
                 ? pricePerGal * (1.0 - activeSubsidy.getDiscountPct() / 100.0)
                 : pricePerGal;
@@ -305,14 +303,14 @@ public class SalesActivity extends AppCompatActivity {
             String now   = new Date().toString();
             double total = volume * precioFinal;
 
-            // Guardar venta con precio ya descontado
+
             FuelSale sale = new FuelSale(fuel, volume, precioFinal, plate, now, stationId);
             long saleId   = db.insertSale(sale);
 
             db.insertInventoryMovement(fuel, InventoryMovement.TYPE_SALIDA, volume,
                     "Venta #" + saleId + (plate.isEmpty() ? "" : " · " + plate), now, stationId);
 
-            // Recibo con precio descontado
+
             db.insertReceipt(saleId, fuel, volume, precioFinal, total, plate, now, stationId);
 
             loadSales();
