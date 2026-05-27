@@ -24,9 +24,9 @@ import java.util.Locale;
 import co.edu.unipiloto.fuelmanager.R;
 import co.edu.unipiloto.fuelmanager.alerts.AlertsActivity;
 import co.edu.unipiloto.fuelmanager.alerts.PriceAlertNotifier;
-import co.edu.unipiloto.fuelmanager.data.local.DatabaseHelper;
 import co.edu.unipiloto.fuelmanager.data.model.PriceAlert;
 import co.edu.unipiloto.fuelmanager.data.model.Station;
+import co.edu.unipiloto.fuelmanager.utils.ApiClient;
 import co.edu.unipiloto.fuelmanager.utils.SessionManager;
 
 public class StationListActivity extends AppCompatActivity {
@@ -37,7 +37,6 @@ public class StationListActivity extends AppCompatActivity {
     private TextView         tvCount;
 
     private StationRepository  repo;
-    private DatabaseHelper     db;
     private SessionManager     session;
     private PriceAlertNotifier notifier;
 
@@ -50,7 +49,6 @@ public class StationListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_station_list);
 
         repo     = new StationRepository(this);
-        db       = DatabaseHelper.getInstance(this);
         session  = new SessionManager(this);
         notifier = new PriceAlertNotifier(this);
 
@@ -62,10 +60,8 @@ public class StationListActivity extends AppCompatActivity {
         setupZoneFilter();
 
         MaterialButton btnAlerts = findViewById(R.id.btnAlerts);
-        if (btnAlerts != null) {
-            btnAlerts.setOnClickListener(v ->
-                    startActivity(new Intent(this, AlertsActivity.class)));
-        }
+        if (btnAlerts != null)
+            btnAlerts.setOnClickListener(v -> startActivity(new Intent(this, AlertsActivity.class)));
 
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
         checkPriceChangesAndNotify();
@@ -79,15 +75,12 @@ public class StationListActivity extends AppCompatActivity {
     }
 
     private void setupZoneFilter() {
-        String[] zones = {"Todas", "Bogotá Norte", "Bogotá Sur",
-                "Bogotá Centro", "Bogotá Occidente"};
-        ArrayAdapter<String> za = new ArrayAdapter<>(this,
-                R.layout.spinner_item, zones);
+        String[] zones = {"Todas", "Bogotá Norte", "Bogotá Sur", "Bogotá Centro", "Bogotá Occidente"};
+        ArrayAdapter<String> za = new ArrayAdapter<>(this, R.layout.spinner_item, zones);
         za.setDropDownViewResource(R.layout.spinner_dropdown_item);
         spinnerZone.setAdapter(za);
         spinnerZone.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> p, View v, int pos, long id) {
+            @Override public void onItemSelected(AdapterView<?> p, View v, int pos, long id) {
                 loadStations(zones[pos]);
             }
             @Override public void onNothingSelected(AdapterView<?> p) {}
@@ -106,8 +99,6 @@ public class StationListActivity extends AppCompatActivity {
 
     private void showAlertDialog(Station station) {
         int userId = session.getUserId();
-
-        // Los precios van dentro de los ítems — setMessage y setItems no pueden coexistir
         final String[] fuelLabels = {
                 "🟠 Corriente  $" + COP.format(station.getPriceCorriente()) + "/gal",
                 "🟡 Extra      $" + COP.format(station.getPriceExtra())     + "/gal",
@@ -119,40 +110,40 @@ public class StationListActivity extends AppCompatActivity {
                 .setTitle("🔔 " + station.getName() + "\nSelecciona el combustible a vigilar")
                 .setItems(fuelLabels, (dialog, which) -> {
                     String fuel = fuelNames[which];
-                    boolean active = db.isAlertActive(station.getId(), fuel, userId);
-
-                    if (active) {
-                        new AlertDialog.Builder(this,
-                                androidx.appcompat.R.style.Theme_AppCompat_Light_Dialog_Alert)
-                                .setTitle("Alerta activa")
-                                .setMessage("Ya tienes una alerta para " + fuel
-                                        + " en " + station.getName()
-                                        + ".\n\n¿Deseas desactivarla?")
-                                .setPositiveButton("Desactivar", (d2, w2) -> {
-                                    db.deactivateAlert(station.getId(), fuel, userId);
-                                    Toast.makeText(this,
-                                            "Alerta desactivada", Toast.LENGTH_SHORT).show();
-                                })
-                                .setNegativeButton("Mantener", null)
-                                .show();
-                    } else {
-                        double refPrice;
-                        switch (fuel) {
-                            case "Extra": refPrice = station.getPriceExtra(); break;
-                            case "ACPM":  refPrice = station.getPriceAcpm();  break;
-                            default:      refPrice = station.getPriceCorriente(); break;
-                        }
-                        PriceAlert alert = new PriceAlert(
-                                station.getId(), station.getName(),
-                                fuel, refPrice, userId);
-                        db.upsertAlert(alert);
-                        Toast.makeText(this,
-                                "✔ Alerta activada para " + fuel + " en " + station.getName(),
-                                Toast.LENGTH_LONG).show();
-                    }
+                    new Thread(() -> {
+                        boolean active = ApiClient.isAlertActive(station.getId(), fuel, userId);
+                        runOnUiThread(() -> {
+                            if (active) {
+                                new AlertDialog.Builder(this,
+                                        androidx.appcompat.R.style.Theme_AppCompat_Light_Dialog_Alert)
+                                        .setTitle("Alerta activa")
+                                        .setMessage("Ya tienes una alerta para " + fuel
+                                                + " en " + station.getName() + ".\n\n¿Deseas desactivarla?")
+                                        .setPositiveButton("Desactivar", (d2, w2) -> {
+                                            new Thread(() ->
+                                                    ApiClient.deactivateAlert(station.getId(), fuel, userId)
+                                            ).start();
+                                            Toast.makeText(this, "Alerta desactivada", Toast.LENGTH_SHORT).show();
+                                        })
+                                        .setNegativeButton("Mantener", null).show();
+                            } else {
+                                double refPrice;
+                                switch (fuel) {
+                                    case "Extra": refPrice = station.getPriceExtra(); break;
+                                    case "ACPM":  refPrice = station.getPriceAcpm();  break;
+                                    default:      refPrice = station.getPriceCorriente(); break;
+                                }
+                                PriceAlert alert = new PriceAlert(
+                                        station.getId(), station.getName(), fuel, refPrice, userId);
+                                new Thread(() -> ApiClient.upsertAlert(alert)).start();
+                                Toast.makeText(this,
+                                        "✔ Alerta activada para " + fuel + " en " + station.getName(),
+                                        Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }).start();
                 })
-                .setNegativeButton("Cancelar", null)
-                .show();
+                .setNegativeButton("Cancelar", null).show();
     }
 
     private void checkPriceChangesAndNotify() {

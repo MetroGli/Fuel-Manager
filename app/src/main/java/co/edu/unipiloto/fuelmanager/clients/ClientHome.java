@@ -18,6 +18,8 @@ import co.edu.unipiloto.fuelmanager.sales.SalesActivity;
 import co.edu.unipiloto.fuelmanager.stations.StationListActivity;
 import co.edu.unipiloto.fuelmanager.utils.Roles;
 import co.edu.unipiloto.fuelmanager.utils.SessionManager;
+import co.edu.unipiloto.fuelmanager.profile.ProfileActivity;
+import co.edu.unipiloto.fuelmanager.stations.StationMapActivity;
 
 public class ClientHome extends AppCompatActivity {
 
@@ -92,6 +94,26 @@ public class ClientHome extends AppCompatActivity {
                     startActivity(new Intent(this, NormativePriceActivity.class)));
         } else {
             cardNormative.setVisibility(View.GONE);
+        }
+
+        // ── PERFIL ───────────────────────────────────────────
+        CardView cardProfile = findViewById(R.id.cardProfile);
+        if (cardProfile != null) {
+            cardProfile.setVisibility(View.VISIBLE);
+            cardProfile.setOnClickListener(v ->
+                    startActivity(new Intent(this, ProfileActivity.class)));
+        }
+
+        // ── MAPA ─────────────────────────────────────────────
+        CardView cardMap = findViewById(R.id.cardMap);
+        if (cardMap != null) {
+            if (role.equals(Roles.CLIENTE)) {
+                cardMap.setVisibility(View.VISIBLE);
+                cardMap.setOnClickListener(v ->
+                        startActivity(new Intent(this, StationMapActivity.class)));
+            } else {
+                cardMap.setVisibility(View.GONE);
+            }
         }
     }
 

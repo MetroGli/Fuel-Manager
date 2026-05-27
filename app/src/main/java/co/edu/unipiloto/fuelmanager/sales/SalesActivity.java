@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Locale;
 
 import co.edu.unipiloto.fuelmanager.R;
-import co.edu.unipiloto.fuelmanager.data.local.DatabaseHelper;
 import co.edu.unipiloto.fuelmanager.data.model.FuelSale;
 import co.edu.unipiloto.fuelmanager.data.model.InventoryMovement;
 import co.edu.unipiloto.fuelmanager.data.model.InventoryStock;
@@ -33,6 +32,7 @@ import co.edu.unipiloto.fuelmanager.data.model.Station;
 import co.edu.unipiloto.fuelmanager.data.model.Subsidy;
 import co.edu.unipiloto.fuelmanager.data.model.User;
 import co.edu.unipiloto.fuelmanager.inventory.InventoryRepository;
+import co.edu.unipiloto.fuelmanager.utils.ApiClient;
 import co.edu.unipiloto.fuelmanager.utils.Roles;
 import co.edu.unipiloto.fuelmanager.utils.SessionManager;
 
@@ -48,18 +48,15 @@ public class SalesActivity extends AppCompatActivity {
     private SalesAdapter      adapter;
     private ReceiptListAdapter receiptAdapter;
 
-    private DatabaseHelper      db;
     private InventoryRepository inventoryRepo;
     private SessionManager      session;
     private int                 stationId;
 
-    private List<User> clientUsers   = new ArrayList<>();
+    private List<User> clientUsers    = new ArrayList<>();
     private User       selectedClient = null;
-    // CLAVE: activeSubsidy como campo de clase para que registrarVenta() lo use
     private Subsidy    activeSubsidy  = null;
 
-    private static final NumberFormat COP =
-            NumberFormat.getInstance(new Locale("es", "CO"));
+    private static final NumberFormat COP = NumberFormat.getInstance(new Locale("es", "CO"));
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,11 +64,10 @@ public class SalesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sales);
 
         session       = new SessionManager(this);
-        db            = DatabaseHelper.getInstance(this);
         inventoryRepo = new InventoryRepository(this);
 
         int userId = session.getUserId();
-        stationId  = db.getStationIdByUserId(userId);
+        stationId  = ApiClient.getStationIdByUserId(userId);
         if (stationId < 0) stationId = userId;
 
         bindViews();
@@ -90,8 +86,6 @@ public class SalesActivity extends AppCompatActivity {
                 startActivity(new Intent(this, ReceiptPdfActivity.class)));
     }
 
-    // ── Vistas ──────────────────────────────────────────────────────────────
-
     private void bindViews() {
         spinnerFuel      = findViewById(R.id.spinnerFuelSale);
         spinnerClient    = findViewById(R.id.spinnerClient);
@@ -100,13 +94,11 @@ public class SalesActivity extends AppCompatActivity {
         etPlate          = findViewById(R.id.etSalePlate);
         tvTotal          = findViewById(R.id.tvSaleTotal);
         tvStockInfo      = findViewById(R.id.tvStockInfo);
-        tvSubsidyInfo    = findViewById(R.id.tvSubsidyInfo);   // id correcto del XML
+        tvSubsidyInfo    = findViewById(R.id.tvSubsidyInfo);
         btnRegistrar     = findViewById(R.id.btnRegistrarVenta);
         recyclerSales    = findViewById(R.id.recyclerSales);
         recyclerReceipts = findViewById(R.id.recyclerStationReceipts);
     }
-
-    // ── Spinner combustible ──────────────────────────────────────────────────
 
     private void setupFuelSpinner() {
         String[] fuels = {
@@ -126,11 +118,9 @@ public class SalesActivity extends AppCompatActivity {
         });
     }
 
-    // ── Spinner cliente ──────────────────────────────────────────────────────
-
     private void setupClientSpinner() {
         new Thread(() -> {
-            clientUsers = db.getUsersByRole(Roles.CLIENTE);
+            clientUsers = ApiClient.getUsersByRole(Roles.CLIENTE);
 
             List<String> names = new ArrayList<>();
             names.add("— Venta directa (sin usuario) —");
@@ -155,13 +145,6 @@ public class SalesActivity extends AppCompatActivity {
         }).start();
     }
 
-    // ── Subsidio en tiempo real ──────────────────────────────────────────────
-
-    /**
-     * Busca subsidio activo y lo guarda en activeSubsidy (campo de clase).
-     * Prioridad: userId → vehicleType → zona de la estación.
-     * Muestra badge verde si hay subsidio, lo oculta si no.
-     */
     private void refreshSubsidy() {
         String fuel = spinnerFuel.getSelectedItem() != null
                 ? spinnerFuel.getSelectedItem().toString() : InventoryMovement.FUEL_CORRIENTE;
@@ -170,23 +153,20 @@ public class SalesActivity extends AppCompatActivity {
             activeSubsidy = null;
 
             if (selectedClient != null) {
-                // 1. Por userId exacto
-                activeSubsidy = db.getActiveSubsidyForUser(
+                activeSubsidy = ApiClient.getActiveSubsidyForUser(
                         String.valueOf(selectedClient.getId()), fuel);
-                // 2. Por tipo de vehículo (Carro / Moto / Camión)
                 if (activeSubsidy == null
                         && selectedClient.getVehicleType() != null
                         && !selectedClient.getVehicleType().isEmpty()) {
-                    activeSubsidy = db.getActiveSubsidyForUser(
+                    activeSubsidy = ApiClient.getActiveSubsidyForUser(
                             selectedClient.getVehicleType(), fuel);
                 }
             }
 
-            // 3. Por zona de la estación (subsidio regional)
             if (activeSubsidy == null) {
-                Station st = db.getStationById(stationId);
+                Station st = ApiClient.getStationById(stationId);
                 if (st != null && st.getZone() != null && !st.getZone().isEmpty()) {
-                    activeSubsidy = db.getActiveSubsidyByZone(st.getZone(), fuel);
+                    activeSubsidy = ApiClient.getActiveSubsidyByZone(st.getZone(), fuel);
                 }
             }
 
@@ -201,20 +181,16 @@ public class SalesActivity extends AppCompatActivity {
                 } else {
                     tvSubsidyInfo.setVisibility(View.GONE);
                 }
-                // Actualizar total si ya hay precio ingresado
                 recalcTotal();
             });
         }).start();
     }
-
-    // ── Recycler ─────────────────────────────────────────────────────────────
 
     private void setupRecycler() {
         adapter = new SalesAdapter(new ArrayList<>());
         recyclerSales.setLayoutManager(new LinearLayoutManager(this));
         recyclerSales.setAdapter(adapter);
 
-        // ReceiptListAdapter: botón PDF por ítem abre ReceiptPdfActivity
         receiptAdapter = new ReceiptListAdapter(new ArrayList<>(), receipt -> {
             Intent i = new Intent(this, ReceiptPdfActivity.class);
             i.putExtra(ReceiptPdfActivity.EXTRA_RECEIPT_ID, (int) receipt.getId());
@@ -223,8 +199,6 @@ public class SalesActivity extends AppCompatActivity {
         recyclerReceipts.setLayoutManager(new LinearLayoutManager(this));
         recyclerReceipts.setAdapter(receiptAdapter);
     }
-
-    // ── Calculadora de total ──────────────────────────────────────────────────
 
     private void setupPriceCalculator() {
         android.text.TextWatcher w = new android.text.TextWatcher() {
@@ -240,7 +214,6 @@ public class SalesActivity extends AppCompatActivity {
         try {
             double vol   = Double.parseDouble(etVolume.getText().toString().trim());
             double price = Double.parseDouble(etPricePerGal.getText().toString().trim());
-            // Refleja el descuento en el total mostrado
             double precioFinal = (activeSubsidy != null)
                     ? price * (1.0 - activeSubsidy.getDiscountPct() / 100.0)
                     : price;
@@ -260,8 +233,6 @@ public class SalesActivity extends AppCompatActivity {
         }).start();
     }
 
-    // ── Registrar venta ───────────────────────────────────────────────────────
-
     private void registrarVenta() {
         String volStr   = etVolume.getText()      != null ? etVolume.getText().toString().trim() : "";
         String priceStr = etPricePerGal.getText() != null ? etPricePerGal.getText().toString().trim() : "";
@@ -280,7 +251,6 @@ public class SalesActivity extends AppCompatActivity {
         if (volume <= 0)      { etVolume.setError("Debe ser mayor a 0"); return; }
         if (pricePerGal <= 0) { etPricePerGal.setError("Debe ser mayor a 0"); return; }
 
-        // Aplicar descuento si hay subsidio activo
         final double precioFinal = (activeSubsidy != null)
                 ? pricePerGal * (1.0 - activeSubsidy.getDiscountPct() / 100.0)
                 : pricePerGal;
@@ -305,15 +275,23 @@ public class SalesActivity extends AppCompatActivity {
             String now   = new Date().toString();
             double total = volume * precioFinal;
 
-            // Guardar venta con precio ya descontado
             FuelSale sale = new FuelSale(fuel, volume, precioFinal, plate, now, stationId);
-            long saleId   = db.insertSale(sale);
+            long saleId   = ApiClient.insertSale(sale);
 
-            db.insertInventoryMovement(fuel, InventoryMovement.TYPE_SALIDA, volume,
-                    "Venta #" + saleId + (plate.isEmpty() ? "" : " · " + plate), now, stationId);
+            // Registrar salida de inventario
+            org.json.JSONObject body = new org.json.JSONObject();
+            try {
+                body.put("fuelType",  fuel);
+                body.put("movType",   InventoryMovement.TYPE_SALIDA);
+                body.put("volumeGal", volume);
+                body.put("note",      "Venta #" + saleId + (plate.isEmpty() ? "" : " · " + plate));
+                body.put("date",      now);
+                body.put("stationId", stationId);
+                ApiClient.postRaw("/inventory", body.toString());
+            } catch (Exception e) { e.printStackTrace(); }
 
-            // Recibo con precio descontado
-            db.insertReceipt(saleId, fuel, volume, precioFinal, total, plate, now, stationId);
+            // Registrar recibo
+            ApiClient.insertReceipt(saleId, fuel, volume, precioFinal, total, plate, now, stationId);
 
             loadSales();
             loadReceipts();
@@ -328,18 +306,16 @@ public class SalesActivity extends AppCompatActivity {
         }).start();
     }
 
-    // ── Carga de datos ────────────────────────────────────────────────────────
-
     private void loadSales() {
         new Thread(() -> {
-            List<FuelSale> sales = db.getSales(stationId);
+            List<FuelSale> sales = ApiClient.getSales(stationId);
             runOnUiThread(() -> adapter.updateData(sales));
         }).start();
     }
 
     private void loadReceipts() {
         new Thread(() -> {
-            List<Receipt> receipts = db.getReceiptsByStation(stationId);
+            List<Receipt> receipts = ApiClient.getReceiptsByStation(stationId);
             runOnUiThread(() -> receiptAdapter.updateData(receipts));
         }).start();
     }

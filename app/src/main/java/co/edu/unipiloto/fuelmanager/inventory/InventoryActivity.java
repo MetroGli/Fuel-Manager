@@ -23,11 +23,11 @@ import java.util.List;
 import java.util.Locale;
 
 import co.edu.unipiloto.fuelmanager.R;
-import co.edu.unipiloto.fuelmanager.data.local.DatabaseHelper;
 import co.edu.unipiloto.fuelmanager.data.model.InventoryMovement;
 import co.edu.unipiloto.fuelmanager.data.model.InventoryStock;
 import co.edu.unipiloto.fuelmanager.normative.NormativePriceActivity;
 import co.edu.unipiloto.fuelmanager.normative.NormativePriceRepository;
+import co.edu.unipiloto.fuelmanager.utils.ApiClient;
 import co.edu.unipiloto.fuelmanager.utils.SessionManager;
 
 public class InventoryActivity extends AppCompatActivity {
@@ -46,16 +46,6 @@ public class InventoryActivity extends AppCompatActivity {
     private String selectedMovType = InventoryMovement.TYPE_ENTRADA;
 
     private static final double STOCK_MIN_GAL = 50.0;
-    private static final NumberFormat FMT = new NumberFormat() {
-        { setMaximumFractionDigits(1); setMinimumFractionDigits(0); }
-        @Override public StringBuffer format(double number, StringBuffer toAppendTo, java.text.FieldPosition pos) {
-            return new java.text.DecimalFormat("#,##0.#").format(number, toAppendTo, pos);
-        }
-        @Override public StringBuffer format(long number, StringBuffer toAppendTo, java.text.FieldPosition pos) {
-            return toAppendTo.append(number);
-        }
-        @Override public Number parse(String source, java.text.ParsePosition parsePosition) { return null; }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +55,8 @@ public class InventoryActivity extends AppCompatActivity {
         SessionManager session = new SessionManager(this);
         int userId = session.getUserId();
 
-        stationId = DatabaseHelper.getInstance(this).getStationIdByUserId(userId);
+        // getStationIdByUserId ahora retorna userId como fallback (ver ApiClient)
+        stationId = ApiClient.getStationIdByUserId(userId);
 
         repository = new InventoryRepository(this);
 
@@ -169,39 +160,37 @@ public class InventoryActivity extends AppCompatActivity {
         String note      = etNote.getText()   != null ? etNote.getText().toString().trim()   : "";
         String fuel      = spinnerFuel.getSelectedItem().toString();
 
-        if (TextUtils.isEmpty(volumeStr)) {
-            etVolume.setError("Ingresa el volumen");
-            return;
-        }
+        if (TextUtils.isEmpty(volumeStr)) { etVolume.setError("Ingresa el volumen"); return; }
 
         double volume;
         try {
             volume = Double.parseDouble(volumeStr);
-        } catch (NumberFormatException e) {
-            etVolume.setError("Número inválido");
-            return;
-        }
+        } catch (NumberFormatException e) { etVolume.setError("Número inválido"); return; }
 
-        if (volume <= 0) {
-            etVolume.setError("El volumen debe ser mayor a 0");
-            return;
-        }
+        if (volume <= 0) { etVolume.setError("El volumen debe ser mayor a 0"); return; }
 
+        // Verificar stock antes de salida — necesita hilo
         if (selectedMovType.equals(InventoryMovement.TYPE_SALIDA)) {
-            InventoryStock stock = repository.getCurrentStock(stationId);
-            if (volume > stock.getStock(fuel)) {
-                Toast.makeText(this,
-                        "⚠ Stock insuficiente de " + fuel + ": solo hay " +
-                                formatGal(stock.getStock(fuel)),
-                        Toast.LENGTH_LONG).show();
-                return;
-            }
+            new Thread(() -> {
+                InventoryStock stock = repository.getCurrentStock(stationId);
+                if (volume > stock.getStock(fuel)) {
+                    runOnUiThread(() -> Toast.makeText(this,
+                            "⚠ Stock insuficiente de " + fuel + ": solo hay " +
+                                    formatGal(stock.getStock(fuel)),
+                            Toast.LENGTH_LONG).show());
+                } else {
+                    insertarMovimiento(fuel, volume, note);
+                }
+            }).start();
+        } else {
+            insertarMovimiento(fuel, volume, note);
         }
+    }
 
+    private void insertarMovimiento(String fuel, double volume, String note) {
         InventoryMovement mov = new InventoryMovement(
                 fuel, selectedMovType, volume, note,
-                new Date().toString(), stationId
-        );
+                new Date().toString(), stationId);
 
         new Thread(() -> {
             long id = repository.insertMovement(mov);

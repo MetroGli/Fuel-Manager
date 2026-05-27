@@ -4,43 +4,36 @@ import android.content.Context;
 
 import java.util.List;
 
-import co.edu.unipiloto.fuelmanager.data.local.DatabaseHelper;
 import co.edu.unipiloto.fuelmanager.data.model.NormativePrice;
+import co.edu.unipiloto.fuelmanager.utils.ApiClient;
 
 public class NormativePriceRepository {
 
-    private DatabaseHelper dbHelper;
-
     public NormativePriceRepository(Context context) {
-        dbHelper = DatabaseHelper.getInstance(context);
+        // Context ya no es necesario
     }
 
     public long insert(NormativePrice price) {
-        return dbHelper.insertNormativePrice(price);
+        return ApiClient.insertNormativePrice(price);
     }
 
     public List<NormativePrice> getAll() {
-        return dbHelper.getNormativePrices();
+        return ApiClient.getNormativePrices();
     }
 
     public void clear() {
-        dbHelper.clearNormativePrices();
+        ApiClient.clearNormativePrices();
     }
 
     public boolean fetchAndSaveFromJson() {
         try {
             clear();
 
-            NormativePrice p1 = new NormativePrice(0,"CORRIENTE",9450.0,new java.util.Date().toString(),"MINMINAS");
-            NormativePrice p2 = new NormativePrice(0,"EXTRA",10200.0,new java.util.Date().toString(),"MINMINAS");
-            NormativePrice p3 = new NormativePrice(0,"ACPM",8900.0,new java.util.Date().toString(),"MINMINAS");
-
-            insert(p1);
-            insert(p2);
-            insert(p3);
+            insert(new NormativePrice(0, "CORRIENTE", 9450.0,  new java.util.Date().toString(), "MINMINAS"));
+            insert(new NormativePrice(0, "EXTRA",     10200.0, new java.util.Date().toString(), "MINMINAS"));
+            insert(new NormativePrice(0, "ACPM",      8900.0,  new java.util.Date().toString(), "MINMINAS"));
 
             return true;
-
         } catch (Exception e) {
             e.printStackTrace();
             return false;

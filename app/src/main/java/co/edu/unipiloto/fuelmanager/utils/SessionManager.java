@@ -36,6 +36,11 @@ public class SessionManager {
         editor.apply();
     }
 
+    public void updateUserName(String newName) {
+        editor.putString(KEY_NAME, newName);
+        editor.apply();
+    }
+
     public boolean isLoggedIn()    { return prefs.getBoolean(KEY_LOGGED, false); }
     public int    getUserId()      { return prefs.getInt(KEY_ID, 1); }
     public String getUserName()    { return prefs.getString(KEY_NAME,  ""); }

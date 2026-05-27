@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="280dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#EF161B22"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:paddingTop="14dp"
+    android:paddingBottom="14dp">
+
+    <!-- ── Nombre de la estación ── -->
+    <TextView
+        android:id="@+id/tvInfoName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Nombre estación"
+        android:textSize="14sp"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:maxLines="2"
+        android:ellipsize="end"/>
+
+    <!-- ── Zona ── -->
+    <TextView
+        android:id="@+id/tvInfoZone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bogotá Norte"
+        android:textSize="11sp"
+        android:textColor="#E65100"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="10dp"/>
+
+    <!-- ── Divisor ── -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#2C3E50"
+        android:layout_marginBottom="10dp"/>
+
+    <!-- ── Título sección ── -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="PRECIOS POR GALÓN"
+        android:textSize="9sp"
+        android:textColor="#546E7A"
+        android:textAllCaps="true"
+        android:letterSpacing="0.08"
+        android:layout_marginBottom="8dp"/>
+
+    <!-- ── Corriente ── -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="6dp">
+
+        <TextView
+            android:layout_width="18dp"
+            android:layout_height="wrap_content"
+            android:text="🟠"
+            android:textSize="14sp"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Corriente"
+            android:textSize="12sp"
+            android:textColor="#FF8A65"
+            android:layout_marginStart="6dp"/>
+
+        <TextView
+            android:id="@+id/tvInfoCorriente"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="$9.450/gal"
+            android:textSize="13sp"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"/>
+    </LinearLayout>
+
+    <!-- ── Extra ── -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="6dp">
+
+        <TextView
+            android:layout_width="18dp"
+            android:layout_height="wrap_content"
+            android:text="🟡"
+            android:textSize="14sp"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Extra"
+            android:textSize="12sp"
+            android:textColor="#FFD54F"
+            android:layout_marginStart="6dp"/>
+
+        <TextView
+            android:id="@+id/tvInfoExtra"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="$10.200/gal"
+            android:textSize="13sp"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"/>
+    </LinearLayout>
+
+    <!-- ── ACPM ── -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="18dp"
+            android:layout_height="wrap_content"
+            android:text="🔵"
+            android:textSize="14sp"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="ACPM"
+            android:textSize="12sp"
+            android:textColor="#64B5F6"
+            android:layout_marginStart="6dp"/>
+
+        <TextView
+            android:id="@+id/tvInfoAcpm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="$8.900/gal"
+            android:textSize="13sp"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"/>
+    </LinearLayout>
+
+    <!-- ── Hint toque ── -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Toca para navegar →"
+        android:textSize="10sp"
+        android:textColor="#546E7A"
+        android:gravity="end"
+        android:layout_marginTop="10dp"/>
+
+</LinearLayout>

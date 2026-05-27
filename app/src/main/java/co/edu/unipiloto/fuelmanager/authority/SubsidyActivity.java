@@ -17,8 +17,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import co.edu.unipiloto.fuelmanager.R;
-import co.edu.unipiloto.fuelmanager.data.local.DatabaseHelper;
 import co.edu.unipiloto.fuelmanager.data.model.Subsidy;
+import co.edu.unipiloto.fuelmanager.utils.ApiClient;
 import co.edu.unipiloto.fuelmanager.utils.SessionManager;
 
 public class SubsidyActivity extends AppCompatActivity {
@@ -28,7 +28,6 @@ public class SubsidyActivity extends AppCompatActivity {
     private MaterialButton btnRegistrar;
     private RecyclerView recyclerSubsidies;
     private SubsidyAdapter adapter;
-    private DatabaseHelper db;
     private int authorityId;
 
     @Override
@@ -36,7 +35,6 @@ public class SubsidyActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_subsidy);
 
-        db = DatabaseHelper.getInstance(this);
         authorityId = new SessionManager(this).getUserId();
 
         spinnerTargetType   = findViewById(R.id.spinnerTargetType);
@@ -78,9 +76,12 @@ public class SubsidyActivity extends AppCompatActivity {
 
     private void setupRecycler() {
         adapter = new SubsidyAdapter(new ArrayList<>(), subsidyId -> {
-            db.deactivateSubsidy(subsidyId);
-            loadSubsidies();
-            Toast.makeText(this, "Subsidio desactivado", Toast.LENGTH_SHORT).show();
+            new Thread(() -> {
+                ApiClient.deactivateSubsidy(subsidyId);
+                loadSubsidies();
+                runOnUiThread(() ->
+                        Toast.makeText(this, "Subsidio desactivado", Toast.LENGTH_SHORT).show());
+            }).start();
         });
         recyclerSubsidies.setLayoutManager(new LinearLayoutManager(this));
         recyclerSubsidies.setAdapter(adapter);
@@ -109,7 +110,7 @@ public class SubsidyActivity extends AppCompatActivity {
         new Thread(() -> {
             Subsidy subsidy = new Subsidy(targetType, targetValue, fuel, discount,
                     startDate, endDate, notes, authorityId);
-            long id = db.insertSubsidy(subsidy);
+            long id = ApiClient.insertSubsidy(subsidy);
             loadSubsidies();
             runOnUiThread(() -> {
                 Toast.makeText(this, "Subsidio #" + id + " registrado ✓", Toast.LENGTH_SHORT).show();
@@ -120,7 +121,7 @@ public class SubsidyActivity extends AppCompatActivity {
 
     private void loadSubsidies() {
         new Thread(() -> {
-            List<Subsidy> list = db.getAllSubsidies();
+            List<Subsidy> list = ApiClient.getAllSubsidies();
             runOnUiThread(() -> adapter.updateData(list));
         }).start();
     }
