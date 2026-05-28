@@ -19,10 +19,10 @@ import java.util.Date;
 import java.util.List;
 
 import co.edu.unipiloto.fuelmanager.R;
-import co.edu.unipiloto.fuelmanager.data.local.DatabaseHelper;
 import co.edu.unipiloto.fuelmanager.data.model.Delivery;
 import co.edu.unipiloto.fuelmanager.data.model.Station;
 import co.edu.unipiloto.fuelmanager.data.model.InventoryMovement;
+import co.edu.unipiloto.fuelmanager.utils.ApiClient;
 import co.edu.unipiloto.fuelmanager.utils.SessionManager;
 
 public class DeliveryActivity extends AppCompatActivity {
@@ -34,16 +34,14 @@ public class DeliveryActivity extends AppCompatActivity {
     private RecyclerView      recyclerDeliveries;
     private DeliveryAdapter   adapter;
 
-    private DatabaseHelper    db;
     private SessionManager    session;
-    private List<Station> stations = new ArrayList<>(); // [id, name, address]
+    private List<Station>     stations = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_delivery);
 
-        db      = DatabaseHelper.getInstance(this);
         session = new SessionManager(this);
 
         bindViews();
@@ -67,16 +65,14 @@ public class DeliveryActivity extends AppCompatActivity {
 
     private void loadStationsSpinner() {
         new Thread(() -> {
-            stations = db.getAllStationsSimple();
+            stations = ApiClient.getAllStationsSimple();
 
             List<String> names = new ArrayList<>();
-            for (Station s : stations) {
+            for (Station s : stations)
                 names.add(s.getName() + " · " + s.getAddress());
-            }
 
             runOnUiThread(() -> {
-                ArrayAdapter<String> sa = new ArrayAdapter<>(this,
-                        R.layout.spinner_item, names);
+                ArrayAdapter<String> sa = new ArrayAdapter<>(this, R.layout.spinner_item, names);
                 sa.setDropDownViewResource(R.layout.spinner_dropdown_item);
                 spinnerStation.setAdapter(sa);
             });
@@ -89,8 +85,7 @@ public class DeliveryActivity extends AppCompatActivity {
                 InventoryMovement.FUEL_EXTRA,
                 InventoryMovement.FUEL_ACPM
         };
-        ArrayAdapter<String> fa = new ArrayAdapter<>(this,
-                R.layout.spinner_item, fuels);
+        ArrayAdapter<String> fa = new ArrayAdapter<>(this, R.layout.spinner_item, fuels);
         fa.setDropDownViewResource(R.layout.spinner_dropdown_item);
         spinnerFuel.setAdapter(fa);
     }
@@ -107,37 +102,26 @@ public class DeliveryActivity extends AppCompatActivity {
             return;
         }
 
-        String volStr = etVolume.getText() != null
-                ? etVolume.getText().toString().trim() : "";
-        String notes  = etNotes.getText() != null
-                ? etNotes.getText().toString().trim() : "";
+        String volStr = etVolume.getText() != null ? etVolume.getText().toString().trim() : "";
+        String notes  = etNotes.getText()  != null ? etNotes.getText().toString().trim()  : "";
 
-        if (TextUtils.isEmpty(volStr)) {
-            etVolume.setError("Ingresa el volumen");
-            return;
-        }
+        if (TextUtils.isEmpty(volStr)) { etVolume.setError("Ingresa el volumen"); return; }
 
         double volume;
         try {
             volume = Double.parseDouble(volStr);
-        } catch (NumberFormatException e) {
-            etVolume.setError("Número inválido");
-            return;
-        }
+        } catch (NumberFormatException e) { etVolume.setError("Número inválido"); return; }
 
-        if (volume <= 0) {
-            etVolume.setError("Debe ser mayor a 0");
-            return;
-        }
+        if (volume <= 0) { etVolume.setError("Debe ser mayor a 0"); return; }
 
         int selectedPos = spinnerStation.getSelectedItemPosition();
         if (selectedPos < 0 || selectedPos >= stations.size()) return;
 
-        Station station = stations.get(selectedPos);
-        int    stationId   = station.getId();
-        String stationName = station.getName();
-        String fuel        = spinnerFuel.getSelectedItem().toString();
-        int    distId      = session.getUserId();
+        Station station    = stations.get(selectedPos);
+        int     stationId  = station.getId();
+        String  stationName = station.getName();
+        String  fuel       = spinnerFuel.getSelectedItem().toString();
+        int     distId     = session.getUserId();
 
         new Thread(() -> {
             Delivery delivery = new Delivery(
@@ -145,7 +129,7 @@ public class DeliveryActivity extends AppCompatActivity {
                     volume, new Date().toString(),
                     notes, distId);
 
-            long id = db.insertDelivery(delivery);
+            long id = ApiClient.insertDelivery(delivery);
             loadDeliveries();
 
             runOnUiThread(() -> {
@@ -160,7 +144,7 @@ public class DeliveryActivity extends AppCompatActivity {
 
     private void loadDeliveries() {
         new Thread(() -> {
-            List<Delivery> list = db.getDeliveries(session.getUserId());
+            List<Delivery> list = ApiClient.getDeliveries(session.getUserId());
             runOnUiThread(() -> adapter.updateData(list));
         }).start();
     }

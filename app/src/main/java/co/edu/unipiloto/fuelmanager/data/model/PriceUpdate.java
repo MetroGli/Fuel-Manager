@@ -1,6 +1,5 @@
 package co.edu.unipiloto.fuelmanager.data.model;
 
-/** Registro histórico de una actualización de precios hecha por un distribuidor. */
 public class PriceUpdate {
 
     private int    id;

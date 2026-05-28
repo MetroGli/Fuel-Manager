@@ -1,19 +1,14 @@
 package co.edu.unipiloto.fuelmanager.data.model;
 
-/**
- * Precio mayorista definido por el distribuidor para una estación.
- * Es el precio al que el distribuidor VENDE a la estación —
- * diferente al precio que la estación cobra al consumidor final.
- */
 public class WholesalePrice {
 
     private int    id;
     private int    stationId;
     private String stationName;
-    private String fuelType;        // Corriente / Extra / ACPM
-    private double pricePerGallon;  // Precio mayorista por galón (COP)
-    private String effectiveDate;   // Fecha desde la que aplica
-    private int    distributorId;   // userId del distribuidor
+    private String fuelType;
+    private double pricePerGallon;
+    private String effectiveDate;
+    private int    distributorId;
 
     public WholesalePrice() {}
 

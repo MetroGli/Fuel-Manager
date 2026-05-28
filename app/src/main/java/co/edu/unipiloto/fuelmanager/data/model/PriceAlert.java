@@ -5,10 +5,10 @@ public class PriceAlert {
     private int    id;
     private int    stationId;
     private String stationName;
-    private String fuelType;       // Corriente / Extra / ACPM
-    private double lastKnownPrice; // Precio cuando se activó la alerta
-    private boolean active;        // Si la alerta está activa
-    private int    userId;         // Usuario que activó la alerta
+    private String fuelType;
+    private double lastKnownPrice;
+    private boolean active;
+    private int    userId;
 
     public PriceAlert() {}
 

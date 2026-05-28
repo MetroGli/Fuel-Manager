@@ -24,16 +24,16 @@ public class AuthorityHome extends AppCompatActivity {
         TextView tvName = findViewById(R.id.tvUserName);
         if (tvName != null) tvName.setText("Hola, " + session.getUserName());
 
-        // HU-10: Reporte PDF
+
         findViewById(R.id.cardReport).setOnClickListener(v ->
                 startActivity(new Intent(this, ReportActivity.class)));
-        // HU-05: Monitoreo precios por región
+
         findViewById(R.id.cardMonitor).setOnClickListener(v ->
                 startActivity(new Intent(this, PriceMonitorActivity.class)));
-        // HU-11: Subsidios
+
         findViewById(R.id.cardSubsidy).setOnClickListener(v ->
                 startActivity(new Intent(this, SubsidyActivity.class)));
-        // HU-12: Historial de recibos
+
         findViewById(R.id.cardReceipts).setOnClickListener(v ->
                 startActivity(new Intent(this, ReceiptHistoryActivity.class)));
 

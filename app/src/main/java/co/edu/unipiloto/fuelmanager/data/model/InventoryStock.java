@@ -1,6 +1,5 @@
 package co.edu.unipiloto.fuelmanager.data.model;
 
-/** Resumen del stock actual por tipo de combustible para una estación. */
 public class InventoryStock {
 
     private double corrienteGal;

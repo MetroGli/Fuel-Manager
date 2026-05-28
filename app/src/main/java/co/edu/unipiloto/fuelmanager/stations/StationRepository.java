@@ -1,28 +1,17 @@
 package co.edu.unipiloto.fuelmanager.stations;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import co.edu.unipiloto.fuelmanager.data.local.DatabaseHelper;
 import co.edu.unipiloto.fuelmanager.data.model.Station;
+import co.edu.unipiloto.fuelmanager.utils.ApiClient;
 
 public class StationRepository {
 
-    private final DatabaseHelper db;
-
     public StationRepository(Context context) {
-        db = DatabaseHelper.getInstance(context);
     }
 
-    /**
-     * Método principal usado por StationListActivity (HU-01 + HU-02).
-     * Si zone es "Todas" o null devuelve todas las estaciones ordenadas por precio corriente ASC.
-     */
     public List<Station> getStationsSortedByPrice(String zone) {
         if (zone == null || zone.equals("Todas")) {
             return getAllOrderedByPrice();
@@ -32,64 +21,19 @@ public class StationRepository {
     }
 
     public List<Station> getAllOrderedByPrice() {
-        SQLiteDatabase database = db.getReadableDatabase();
-        List<Station> list = new ArrayList<>();
-        Cursor cursor = database.query(
-                DatabaseHelper.TABLE_STATIONS,
-                null, null, null, null, null,
-                DatabaseHelper.COL_PRICE_CORRIENTE + " ASC"
-        );
-        if (cursor != null) {
-            while (cursor.moveToNext()) list.add(cursorToStation(cursor));
-            cursor.close();
-        }
-        database.close();
+
+        List<Station> list = ApiClient.getAllStations();
+        list.sort((a, b) -> Double.compare(a.getPriceCorriente(), b.getPriceCorriente()));
         return list;
     }
 
     public List<Station> getByZone(String zone) {
-        SQLiteDatabase database = db.getReadableDatabase();
-        List<Station> list = new ArrayList<>();
-        Cursor cursor = database.query(
-                DatabaseHelper.TABLE_STATIONS,
-                null,
-                DatabaseHelper.COL_ZONE + "=?",
-                new String[]{zone},
-                null, null,
-                DatabaseHelper.COL_PRICE_CORRIENTE + " ASC"
-        );
-        if (cursor != null) {
-            while (cursor.moveToNext()) list.add(cursorToStation(cursor));
-            cursor.close();
-        }
-        database.close();
+        List<Station> list = ApiClient.getStationsByZone(zone);
+        list.sort((a, b) -> Double.compare(a.getPriceCorriente(), b.getPriceCorriente()));
         return list;
     }
 
     public boolean updatePrices(int stationId, double corriente, double extra, double acpm) {
-        SQLiteDatabase database = db.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(DatabaseHelper.COL_PRICE_CORRIENTE, corriente);
-        values.put(DatabaseHelper.COL_PRICE_EXTRA, extra);
-        values.put(DatabaseHelper.COL_PRICE_ACPM, acpm);
-        int rows = database.update(
-                DatabaseHelper.TABLE_STATIONS, values,
-                DatabaseHelper.COL_ID + "=?",
-                new String[]{String.valueOf(stationId)}
-        );
-        database.close();
-        return rows > 0;
-    }
-
-    private Station cursorToStation(Cursor c) {
-        Station s = new Station();
-        s.setId(c.getInt(c.getColumnIndexOrThrow(DatabaseHelper.COL_ID)));
-        s.setName(c.getString(c.getColumnIndexOrThrow(DatabaseHelper.COL_ST_NAME)));
-        s.setAddress(c.getString(c.getColumnIndexOrThrow(DatabaseHelper.COL_ADDRESS)));
-        s.setZone(c.getString(c.getColumnIndexOrThrow(DatabaseHelper.COL_ZONE)));
-        s.setPriceCorriente(c.getDouble(c.getColumnIndexOrThrow(DatabaseHelper.COL_PRICE_CORRIENTE)));
-        s.setPriceExtra(c.getDouble(c.getColumnIndexOrThrow(DatabaseHelper.COL_PRICE_EXTRA)));
-        s.setPriceAcpm(c.getDouble(c.getColumnIndexOrThrow(DatabaseHelper.COL_PRICE_ACPM)));
-        return s;
+        return ApiClient.updateStationPrices(stationId, corriente, extra, acpm);
     }
 }

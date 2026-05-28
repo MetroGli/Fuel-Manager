@@ -5,11 +5,11 @@ public class Delivery {
     private int    id;
     private int    stationId;
     private String stationName;
-    private String fuelType;       // Corriente / Extra / ACPM
-    private double volumeGal;      // Galones entregados
-    private String date;           // Fecha de entrega
-    private String notes;          // Observaciones opcionales
-    private int    distributorId;  // userId del distribuidor
+    private String fuelType;
+    private double volumeGal;
+    private String date;
+    private String notes;
+    private int    distributorId;
 
     public Delivery() {}
 

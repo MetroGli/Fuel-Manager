@@ -10,31 +10,51 @@ import android.os.Build;
 import androidx.core.app.NotificationCompat;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import co.edu.unipiloto.fuelmanager.R;
-import co.edu.unipiloto.fuelmanager.data.local.DatabaseHelper;
 import co.edu.unipiloto.fuelmanager.data.model.PriceAlert;
+import co.edu.unipiloto.fuelmanager.data.model.Station;
 import co.edu.unipiloto.fuelmanager.stations.StationListActivity;
+import co.edu.unipiloto.fuelmanager.utils.ApiClient;
 
 public class PriceAlertNotifier {
 
     private static final String CHANNEL_ID   = "price_alerts";
     private static final String CHANNEL_NAME = "Alertas de precio";
 
-    private final Context        context;
-    private final DatabaseHelper db;
+    private final Context context;
     private static final NumberFormat COP = NumberFormat.getInstance(new Locale("es", "CO"));
 
     public PriceAlertNotifier(Context context) {
         this.context = context.getApplicationContext();
-        this.db      = DatabaseHelper.getInstance(context);
         createChannel();
     }
 
     public void checkAndNotify(int userId) {
-        List<PriceAlert> changed = db.checkPriceChanges(userId);
+        List<PriceAlert> active = ApiClient.getActiveAlerts(userId);
+        List<PriceAlert> changed = new ArrayList<>();
+
+        for (PriceAlert alert : active) {
+            Station st = ApiClient.getStationById(alert.getStationId());
+            if (st == null) continue;
+
+            double currentPrice;
+            switch (alert.getFuelType()) {
+                case "Extra": currentPrice = st.getPriceExtra(); break;
+                case "ACPM":  currentPrice = st.getPriceAcpm();  break;
+                default:      currentPrice = st.getPriceCorriente(); break;
+            }
+
+            if (currentPrice != alert.getLastKnownPrice()) {
+                alert.setLastKnownPrice(currentPrice);
+                ApiClient.upsertAlert(alert);
+                changed.add(alert);
+            }
+        }
+
         for (int i = 0; i < changed.size(); i++) {
             sendNotification(changed.get(i), i);
         }
@@ -44,7 +64,6 @@ public class PriceAlertNotifier {
         NotificationManager nm = (NotificationManager)
                 context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        // Intent para abrir StationListActivity al tocar la notificación
         Intent intent = new Intent(context, StationListActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pi = PendingIntent.getActivity(context, notifId, intent,
@@ -70,9 +89,7 @@ public class PriceAlertNotifier {
     private void createChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(
-                    CHANNEL_ID,
-                    CHANNEL_NAME,
-                    NotificationManager.IMPORTANCE_DEFAULT);
+                    CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
             channel.setDescription("Avisa cuando cambia el precio de combustible");
             NotificationManager nm = (NotificationManager)
                     context.getSystemService(Context.NOTIFICATION_SERVICE);

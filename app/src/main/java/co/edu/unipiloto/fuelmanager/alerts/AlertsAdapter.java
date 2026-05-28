@@ -48,7 +48,6 @@ public class AlertsAdapter extends RecyclerView.Adapter<AlertsAdapter.VH> {
         h.tvFuel.setText(fuelEmoji(a.getFuelType()) + " " + a.getFuelType());
         h.tvPrice.setText("Precio ref: $" + COP.format(a.getLastKnownPrice()) + "/gal");
 
-        // Color por combustible
         int color;
         switch (a.getFuelType()) {
             case "Extra": color = 0xFFFF8F00; break;
@@ -57,7 +56,6 @@ public class AlertsAdapter extends RecyclerView.Adapter<AlertsAdapter.VH> {
         }
         h.tvFuel.setTextColor(color);
 
-        // Toggle sin disparar listener al hacer bind
         h.switchAlert.setOnCheckedChangeListener(null);
         h.switchAlert.setChecked(a.isActive());
         h.switchAlert.setOnCheckedChangeListener((btn, checked) ->

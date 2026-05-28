@@ -15,37 +15,36 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
 import co.edu.unipiloto.fuelmanager.R;
-import co.edu.unipiloto.fuelmanager.data.local.DatabaseHelper;
 import co.edu.unipiloto.fuelmanager.data.model.Station;
 import co.edu.unipiloto.fuelmanager.data.model.User;
+import co.edu.unipiloto.fuelmanager.utils.ApiClient;
 import co.edu.unipiloto.fuelmanager.utils.Roles;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    // Campos base
     private TextInputEditText etName, etEmail, etPassword, etConfirm;
     private Spinner           spinnerRole;
     private MaterialButton    btnRegister;
 
-    // Sección vehículo — solo para CLIENTE
     private View              sectionVehicle;
     private Spinner           spinnerVehicle;
 
-    // Sección estación — solo para ESTACION
     private View              sectionStation;
     private TextInputEditText etAddress, etZone;
     private TextInputEditText etPriceCorriente, etPriceExtra, etPriceAcpm;
 
-    private DatabaseHelper db;
     private String selectedRole    = Roles.CLIENTE;
-    private String selectedVehicle = DatabaseHelper.VEHICLE_CARRO;
+    private String selectedVehicle = "Carro";
+
+    private static final String VEHICLE_CARRO  = "Carro";
+    private static final String VEHICLE_MOTO   = "Moto";
+    private static final String VEHICLE_CAMION = "Camión";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        db = DatabaseHelper.getInstance(this);
         bindViews();
         setupRoleSpinner();
         setupVehicleSpinner();
@@ -93,11 +92,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void setupVehicleSpinner() {
-        String[] vehicles = {
-                DatabaseHelper.VEHICLE_CARRO,
-                DatabaseHelper.VEHICLE_MOTO,
-                DatabaseHelper.VEHICLE_CAMION
-        };
+        String[] vehicles = { VEHICLE_CARRO, VEHICLE_MOTO, VEHICLE_CAMION };
         ArrayAdapter<String> va = new ArrayAdapter<>(this, R.layout.spinner_item, vehicles);
         va.setDropDownViewResource(R.layout.spinner_dropdown_item);
         spinnerVehicle.setAdapter(va);
@@ -122,15 +117,25 @@ public class RegisterActivity extends AppCompatActivity {
         if (password.length() < 6)       { etPassword.setError("Mínimo 6 caracteres"); return; }
         if (!password.equals(confirm))   { etConfirm.setError("Las contraseñas no coinciden"); return; }
 
-        if (db.emailExists(email)) { etEmail.setError("Este correo ya está registrado"); return; }
+        new Thread(() -> {
+            boolean exists = ApiClient.emailExists(email);
+            runOnUiThread(() -> {
+                if (exists) {
+                    etEmail.setError("Este correo ya está registrado");
+                    return;
+                }
+                proceedRegister(name, email, password);
+            });
+        }).start();
+    }
 
+    private void proceedRegister(String name, String email, String password) {
         User user = new User(0, name, email, password, selectedRole);
 
         if (selectedRole.equals(Roles.CLIENTE)) {
-            // Guardar tipo de vehículo
             user.setVehicleType(selectedVehicle);
             new Thread(() -> {
-                long id = db.insertUser(user);
+                long id = ApiClient.insertUser(user);
                 runOnUiThread(() -> onResult(id));
             }).start();
 
@@ -159,14 +164,13 @@ public class RegisterActivity extends AppCompatActivity {
             station.setPriceCorriente(corriente); station.setPriceExtra(extra); station.setPriceAcpm(acpm);
 
             new Thread(() -> {
-                long id = db.insertUserWithStation(user, station);
+                long id = ApiClient.insertUserWithStation(user, station);
                 runOnUiThread(() -> onResult(id));
             }).start();
 
         } else {
-            // DISTRIBUIDOR, AUTORIDAD — sin campos extra
             new Thread(() -> {
-                long id = db.insertUser(user);
+                long id = ApiClient.insertUser(user);
                 runOnUiThread(() -> onResult(id));
             }).start();
         }

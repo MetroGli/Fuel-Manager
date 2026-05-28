@@ -20,9 +20,9 @@ import java.util.Date;
 import java.util.List;
 
 import co.edu.unipiloto.fuelmanager.R;
-import co.edu.unipiloto.fuelmanager.data.local.DatabaseHelper;
 import co.edu.unipiloto.fuelmanager.data.model.PriceUpdate;
 import co.edu.unipiloto.fuelmanager.data.model.Station;
+import co.edu.unipiloto.fuelmanager.utils.ApiClient;
 import co.edu.unipiloto.fuelmanager.utils.SessionManager;
 
 public class PriceUpdateActivity extends AppCompatActivity {
@@ -30,11 +30,10 @@ public class PriceUpdateActivity extends AppCompatActivity {
     private Spinner         spinnerStation;
     private EditText        etCorriente, etExtra, etAcpm;
     private TextView        tvCurrentCorriente, tvCurrentExtra, tvCurrentAcpm;
-    private ImageButton btnBack;
+    private ImageButton     btnBack;
     private Button          btnUpdate;
     private RecyclerView    recyclerHistory;
 
-    private DatabaseHelper  db;
     private SessionManager  session;
     private List<Station>   stations = new ArrayList<>();
     private Station         selectedStation;
@@ -45,12 +44,10 @@ public class PriceUpdateActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_price_update);
 
-        db      = DatabaseHelper.getInstance(this);
         session = new SessionManager(this);
 
         bindViews();
         loadStations();
-        loadHistory();
 
         btnBack.setOnClickListener(v -> finish());
         btnUpdate.setOnClickListener(v -> doUpdate());
@@ -74,37 +71,39 @@ public class PriceUpdateActivity extends AppCompatActivity {
     }
 
     private void loadStations() {
-        stations = db.getAllStationsSimple();
+        new Thread(() -> {
+            stations = ApiClient.getAllStationsSimple();
 
-        List<String> names = new ArrayList<>();
-        for (Station s : stations) names.add(s.getName());
+            List<String> names = new ArrayList<>();
+            for (Station s : stations) names.add(s.getName());
 
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(
-                this, android.R.layout.simple_spinner_item, names);
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerStation.setAdapter(spinnerAdapter);
+            runOnUiThread(() -> {
+                ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(
+                        this, android.R.layout.simple_spinner_item, names);
+                spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinnerStation.setAdapter(spinnerAdapter);
 
-        spinnerStation.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> p, View v, int pos, long id) {
-                selectedStation = stations.get(pos);
-                showCurrentPrices(selectedStation);
-            }
-            @Override public void onNothingSelected(AdapterView<?> p) {}
-        });
+                spinnerStation.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> p, View v, int pos, long id) {
+                        selectedStation = stations.get(pos);
+                        showCurrentPrices(selectedStation);
+                    }
+                    @Override public void onNothingSelected(AdapterView<?> p) {}
+                });
 
-        if (!stations.isEmpty()) {
-            selectedStation = stations.get(0);
-            showCurrentPrices(selectedStation);
-        }
+                if (!stations.isEmpty()) {
+                    selectedStation = stations.get(0);
+                    showCurrentPrices(selectedStation);
+                }
+            });
+        }).start();
     }
 
     private void showCurrentPrices(Station s) {
         tvCurrentCorriente.setText(String.format("Actual: $%.0f/gal", s.getPriceCorriente()));
         tvCurrentExtra.setText(String.format("Actual: $%.0f/gal", s.getPriceExtra()));
         tvCurrentAcpm.setText(String.format("Actual: $%.0f/gal", s.getPriceAcpm()));
-
-        // Pre-llenar con precios actuales
         etCorriente.setText(String.valueOf((int) s.getPriceCorriente()));
         etExtra.setText(String.valueOf((int) s.getPriceExtra()));
         etAcpm.setText(String.valueOf((int) s.getPriceAcpm()));
@@ -137,34 +136,32 @@ public class PriceUpdateActivity extends AppCompatActivity {
             return;
         }
 
-        // Guardar registro antes de actualizar
-        PriceUpdate pu = new PriceUpdate(
-                selectedStation.getId(),
-                selectedStation.getName(),
-                selectedStation.getPriceCorriente(), newCor,
-                selectedStation.getPriceExtra(),     newExt,
-                selectedStation.getPriceAcpm(),      newAcp,
-                new Date().toString(),
-                session.getUserId()
-        );
-        db.insertPriceUpdate(pu);
+        new Thread(() -> {
 
-        // Actualizar precios en la tabla de estaciones
-        boolean ok = db.updateStationPrices(selectedStation.getId(), newCor, newExt, newAcp);
+            PriceUpdate pu = new PriceUpdate(
+                    selectedStation.getId(),
+                    selectedStation.getName(),
+                    selectedStation.getPriceCorriente(), newCor,
+                    selectedStation.getPriceExtra(),     newExt,
+                    selectedStation.getPriceAcpm(),      newAcp,
+                    new Date().toString(),
+                    session.getUserId()
+            );
 
-        if (ok) {
-            Toast.makeText(this, "✓ Precios actualizados", Toast.LENGTH_SHORT).show();
-            // Recargar estación con nuevos precios
-            selectedStation = db.getStationById(selectedStation.getId());
-            showCurrentPrices(selectedStation);
-            loadHistory();
-        } else {
-            Toast.makeText(this, "Error al actualizar", Toast.LENGTH_SHORT).show();
-        }
-    }
+            boolean ok = ApiClient.updateStationPrices(
+                    selectedStation.getId(), newCor, newExt, newAcp);
 
-    private void loadHistory() {
-        List<PriceUpdate> history = db.getAllPriceUpdates();
-        adapter.updateData(history);
+            Station updated = ApiClient.getStationById(selectedStation.getId());
+
+            runOnUiThread(() -> {
+                if (ok && updated != null) {
+                    Toast.makeText(this, "✓ Precios actualizados", Toast.LENGTH_SHORT).show();
+                    selectedStation = updated;
+                    showCurrentPrices(selectedStation);
+                } else {
+                    Toast.makeText(this, "Error al actualizar", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }).start();
     }
 }

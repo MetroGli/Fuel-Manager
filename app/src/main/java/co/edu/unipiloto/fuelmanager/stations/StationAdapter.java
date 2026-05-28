@@ -50,7 +50,6 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.VH> {
         h.tvExtra.setText("$"     + COP.format(s.getPriceExtra()));
         h.tvAcpm.setText("$"      + COP.format(s.getPriceAcpm()));
 
-        // Badge solo en el #1
         if (position == 0) {
             h.badgeBest.setVisibility(View.VISIBLE);
             h.card.setCardBackgroundColor(0xFF1A2A1A);
@@ -59,7 +58,6 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.VH> {
             h.card.setCardBackgroundColor(0xFF161B22);
         }
 
-        // Toque → diálogo de alerta
         h.card.setOnClickListener(v -> {
             if (listener != null) listener.onClick(s);
         });
@@ -80,17 +78,14 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.VH> {
 
         VH(View v) {
             super(v);
-            // CardView raíz no tiene android:id → usamos itemView directamente
             card        = (CardView) v;
             tvRank      = v.findViewById(R.id.tvRank);
             tvName      = v.findViewById(R.id.tvStationName);
-            // IDs reales del item_station.xml existente
             tvAddress   = v.findViewById(R.id.tvAddress);
             tvZone      = v.findViewById(R.id.tvZone);
             tvCorriente = v.findViewById(R.id.tvPriceCorriente);
             tvExtra     = v.findViewById(R.id.tvPriceExtra);
             tvAcpm      = v.findViewById(R.id.tvPriceAcpm);
-            // Badge opcional — puede no existir en el XML actual
             badgeBest   = v.findViewById(R.id.badgeBestPrice);
         }
     }

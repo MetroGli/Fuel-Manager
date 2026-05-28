@@ -1,9 +1,5 @@
 package co.edu.unipiloto.fuelmanager.data.model;
 
-/**
- * Recibo generado automáticamente al registrar cada venta.
- * Vinculado a FuelSale por sale_id.
- */
 public class Receipt {
 
     private int    id;

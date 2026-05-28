@@ -14,9 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import co.edu.unipiloto.fuelmanager.R;
-import co.edu.unipiloto.fuelmanager.data.local.DatabaseHelper;
 import co.edu.unipiloto.fuelmanager.data.model.Station;
 import co.edu.unipiloto.fuelmanager.stations.StationAdapter;
+import co.edu.unipiloto.fuelmanager.utils.ApiClient;
 
 public class PriceMonitorActivity extends AppCompatActivity {
 
@@ -24,7 +24,6 @@ public class PriceMonitorActivity extends AppCompatActivity {
     private RecyclerView recycler;
     private StationAdapter adapter;
     private TextView tvSummary;
-    private DatabaseHelper db;
     private static final NumberFormat COP = NumberFormat.getInstance(new Locale("es", "CO"));
 
     @Override
@@ -32,7 +31,6 @@ public class PriceMonitorActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_price_monitor);
 
-        db = DatabaseHelper.getInstance(this);
         spinnerZone = findViewById(R.id.spinnerMonitorZone);
         recycler    = findViewById(R.id.recyclerMonitor);
         tvSummary   = findViewById(R.id.tvMonitorSummary);
@@ -61,15 +59,15 @@ public class PriceMonitorActivity extends AppCompatActivity {
     private void loadStations(String zone) {
         new Thread(() -> {
             List<Station> stations = zone.equals("Todas")
-                    ? db.getAllStations()
-                    : db.getStationsByZone(zone);
-            // Calcular estadísticas
+                    ? ApiClient.getAllStations()
+                    : ApiClient.getStationsByZone(zone);
+
             if (!stations.isEmpty()) {
-                double minC=Double.MAX_VALUE, maxC=0, sumC=0;
-                double minE=Double.MAX_VALUE, maxE=0;
-                double minA=Double.MAX_VALUE, maxA=0;
+                double minC = Double.MAX_VALUE, maxC = 0, sumC = 0;
+                double minE = Double.MAX_VALUE, maxE = 0;
+                double minA = Double.MAX_VALUE, maxA = 0;
                 for (Station s : stations) {
-                    minC = Math.min(minC, s.getPriceCorriente()); maxC = Math.max(maxC, s.getPriceCorriente()); sumC+=s.getPriceCorriente();
+                    minC = Math.min(minC, s.getPriceCorriente()); maxC = Math.max(maxC, s.getPriceCorriente()); sumC += s.getPriceCorriente();
                     minE = Math.min(minE, s.getPriceExtra());     maxE = Math.max(maxE, s.getPriceExtra());
                     minA = Math.min(minA, s.getPriceAcpm());      maxA = Math.max(maxA, s.getPriceAcpm());
                 }
