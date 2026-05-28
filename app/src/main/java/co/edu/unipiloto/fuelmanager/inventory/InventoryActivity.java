@@ -55,7 +55,6 @@ public class InventoryActivity extends AppCompatActivity {
         SessionManager session = new SessionManager(this);
         int userId = session.getUserId();
 
-        // getStationIdByUserId ahora retorna userId como fallback (ver ApiClient)
         stationId = ApiClient.getStationIdByUserId(userId);
 
         repository = new InventoryRepository(this);
@@ -169,7 +168,7 @@ public class InventoryActivity extends AppCompatActivity {
 
         if (volume <= 0) { etVolume.setError("El volumen debe ser mayor a 0"); return; }
 
-        // Verificar stock antes de salida — necesita hilo
+
         if (selectedMovType.equals(InventoryMovement.TYPE_SALIDA)) {
             new Thread(() -> {
                 InventoryStock stock = repository.getCurrentStock(stationId);

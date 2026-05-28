@@ -1,16 +1,12 @@
 package co.edu.unipiloto.fuelmanager.data.model;
 
-/**
- * Representa un subsidio asignado por la Autoridad Reguladora.
- * Puede aplicarse a una REGION (zona) o a un USER (ID de usuario).
- */
 public class Subsidy {
 
     private int    id;
-    private String targetType;   // "USER" o "REGION"
-    private String targetValue;  // ID del usuario o nombre de la zona
-    private String fuelType;     // Corriente / Extra / ACPM / TODOS
-    private double discountPct;  // Porcentaje de descuento (ej: 10.0 = 10%)
+    private String targetType;
+    private String targetValue;
+    private String fuelType;
+    private double discountPct;
     private String startDate;
     private String endDate;
     private String notes;

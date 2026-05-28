@@ -13,7 +13,7 @@ import java.util.List;
 
 import co.edu.unipiloto.fuelmanager.R;
 import co.edu.unipiloto.fuelmanager.data.model.NormativePrice;
-import co.edu.unipiloto.fuelmanager.normative.NormativePriceRepository;
+
 
 public class NormativePriceActivity extends AppCompatActivity {
 
@@ -36,7 +36,7 @@ public class NormativePriceActivity extends AppCompatActivity {
         recycler.setLayoutManager(new LinearLayoutManager(this));
         recycler.setAdapter(adapter);
 
-        // Cargar precios existentes al abrir
+
         loadPrices();
 
         btnActualizar.setOnClickListener(v -> actualizarPrecios());

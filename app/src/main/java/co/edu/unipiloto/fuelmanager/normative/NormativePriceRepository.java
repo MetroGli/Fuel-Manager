@@ -10,7 +10,7 @@ import co.edu.unipiloto.fuelmanager.utils.ApiClient;
 public class NormativePriceRepository {
 
     public NormativePriceRepository(Context context) {
-        // Context ya no es necesario
+
     }
 
     public long insert(NormativePrice price) {

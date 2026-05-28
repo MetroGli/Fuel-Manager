@@ -8,7 +8,6 @@ public class NormativePrice {
     private String effectiveDate;
     private String source;
 
-    // 🔹 Constructor completo
     public NormativePrice(int id,
                           String fuelType,
                           double pricePerGallon,
@@ -21,13 +20,10 @@ public class NormativePrice {
         this.source = source;
     }
 
-    // 🔹 Constructor vacío (útil para DatabaseHelper)
+
     public NormativePrice() {
     }
 
-    // ======================
-    // GETTERS
-    // ======================
 
     public int getId() {
         return id;
@@ -49,9 +45,6 @@ public class NormativePrice {
         return source;
     }
 
-    // ======================
-    // SETTERS
-    // ======================
 
     public void setId(int id) {
         this.id = id;

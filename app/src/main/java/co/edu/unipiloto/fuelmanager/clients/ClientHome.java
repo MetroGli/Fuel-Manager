@@ -44,7 +44,7 @@ public class ClientHome extends AppCompatActivity {
 
     private void setupCards(String role) {
 
-        // ── HU-01: solo CLIENTE ──────────────────────────────
+
         CardView cardPrices = findViewById(R.id.cardPrices);
         if (role.equals(Roles.CLIENTE)) {
             cardPrices.setVisibility(View.VISIBLE);
@@ -54,7 +54,7 @@ public class ClientHome extends AppCompatActivity {
             cardPrices.setVisibility(View.GONE);
         }
 
-        // ── HU-07: ESTACION y ADMIN ──────────────────────────
+
         CardView cardInventory = findViewById(R.id.cardInventory);
         if (role.equals(Roles.ESTACION) || role.equals(Roles.ADMIN)) {
             cardInventory.setVisibility(View.VISIBLE);
@@ -64,7 +64,7 @@ public class ClientHome extends AppCompatActivity {
             cardInventory.setVisibility(View.GONE);
         }
 
-        // ── HU-03: ESTACION y ADMIN ──────────────────────────
+
         CardView cardSales = findViewById(R.id.cardSales);
         if (role.equals(Roles.ESTACION) || role.equals(Roles.ADMIN)) {
             cardSales.setVisibility(View.VISIBLE);
@@ -74,7 +74,7 @@ public class ClientHome extends AppCompatActivity {
             cardSales.setVisibility(View.GONE);
         }
 
-        // ── HU-12: Recibos PDF — ESTACION y ADMIN ────────────
+
         CardView cardReceipts = findViewById(R.id.cardReceipts);
         if (cardReceipts != null) {
             if (role.equals(Roles.ESTACION) || role.equals(Roles.ADMIN)) {
@@ -86,7 +86,7 @@ public class ClientHome extends AppCompatActivity {
             }
         }
 
-        // ── HU-08: solo ADMIN ────────────────────────────────
+
         CardView cardNormative = findViewById(R.id.cardNormative);
         if (role.equals(Roles.ADMIN)) {
             cardNormative.setVisibility(View.VISIBLE);
@@ -96,7 +96,7 @@ public class ClientHome extends AppCompatActivity {
             cardNormative.setVisibility(View.GONE);
         }
 
-        // ── PERFIL ───────────────────────────────────────────
+
         CardView cardProfile = findViewById(R.id.cardProfile);
         if (cardProfile != null) {
             cardProfile.setVisibility(View.VISIBLE);
@@ -104,7 +104,7 @@ public class ClientHome extends AppCompatActivity {
                     startActivity(new Intent(this, ProfileActivity.class)));
         }
 
-        // ── MAPA ─────────────────────────────────────────────
+
         CardView cardMap = findViewById(R.id.cardMap);
         if (cardMap != null) {
             if (role.equals(Roles.CLIENTE)) {

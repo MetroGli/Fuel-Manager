@@ -8,7 +8,6 @@ public class PasswordUtil {
 
     private PasswordUtil() {}
 
-    /** Devuelve el hash SHA-256 hexadecimal del password. */
     public static String hash(String password) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");

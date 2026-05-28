@@ -36,7 +36,6 @@ public class RegisterActivity extends AppCompatActivity {
     private String selectedRole    = Roles.CLIENTE;
     private String selectedVehicle = "Carro";
 
-    // Tipos de vehículo (antes venían de DatabaseHelper)
     private static final String VEHICLE_CARRO  = "Carro";
     private static final String VEHICLE_MOTO   = "Moto";
     private static final String VEHICLE_CAMION = "Camión";
@@ -118,7 +117,6 @@ public class RegisterActivity extends AppCompatActivity {
         if (password.length() < 6)       { etPassword.setError("Mínimo 6 caracteres"); return; }
         if (!password.equals(confirm))   { etConfirm.setError("Las contraseñas no coinciden"); return; }
 
-        // Verificar email en red — necesita hilo
         new Thread(() -> {
             boolean exists = ApiClient.emailExists(email);
             runOnUiThread(() -> {

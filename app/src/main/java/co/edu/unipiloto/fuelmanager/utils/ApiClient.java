@@ -711,10 +711,6 @@ public class ApiClient {
         return wp;
     }
 
-// ═══════════════════════════════════════════════════════
-//  INVENTARIO — agregar estos métodos en ApiClient.java
-// ═══════════════════════════════════════════════════════
-
     /** Expone post() como público para uso desde InventoryRepository */
     public static String postRaw(String endpoint, String jsonBody) throws Exception {
         return post(endpoint, jsonBody);
@@ -756,9 +752,6 @@ public class ApiClient {
         return new InventoryStock(0, 0, 0);
     }
 
-// ═══════════════════════════════════════════════════════
-//  PRICE UPDATES — agregar estos métodos en ApiClient.java
-// ═══════════════════════════════════════════════════════
 
     /** Equivale a db.insertPriceUpdate(pu) */
     public static long insertPriceUpdate(PriceUpdate pu) {

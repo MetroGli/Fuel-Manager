@@ -28,15 +28,15 @@ public class DistributorHome extends AppCompatActivity {
         TextView tvName = findViewById(R.id.tvUserName);
         if (tvName != null) tvName.setText("Hola, " + session.getUserName());
 
-        // HU-09: Registrar entrega
+
         findViewById(R.id.cardDelivery).setOnClickListener(v ->
                 startActivity(new Intent(this, DeliveryActivity.class)));
 
-        // HU-04: Actualizar precios al consumidor
+
         findViewById(R.id.cardPriceUpdate).setOnClickListener(v ->
                 startActivity(new Intent(this, PriceUpdateActivity.class)));
 
-        // HU-13: Precios mayoristas (distribuidor → estación)
+
         if (findViewById(R.id.cardWholesale) != null) {
             findViewById(R.id.cardWholesale).setOnClickListener(v ->
                     startActivity(new Intent(this, WholesalePriceActivity.class)));

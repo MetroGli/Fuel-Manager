@@ -36,22 +36,22 @@ public class PriceUpdateHistoryAdapter
 
         h.tvStation.setText(pu.getStationName());
 
-        // Corriente
+
         h.tvCorriente.setText(String.format(
                 "Corriente: $%.0f → $%.0f", pu.getOldCorriente(), pu.getNewCorriente()));
         colorDiff(h.tvCorriente, pu.getOldCorriente(), pu.getNewCorriente());
 
-        // Extra
+
         h.tvExtra.setText(String.format(
                 "Extra: $%.0f → $%.0f", pu.getOldExtra(), pu.getNewExtra()));
         colorDiff(h.tvExtra, pu.getOldExtra(), pu.getNewExtra());
 
-        // ACPM
+
         h.tvAcpm.setText(String.format(
                 "ACPM: $%.0f → $%.0f", pu.getOldAcpm(), pu.getNewAcpm()));
         colorDiff(h.tvAcpm, pu.getOldAcpm(), pu.getNewAcpm());
 
-        // Fecha (truncar)
+
         String date = pu.getDate();
         h.tvDate.setText(date.length() > 24 ? date.substring(0, 24) : date);
     }

@@ -47,7 +47,7 @@ public class NormativePriceAdapter
         String date = p.getEffectiveDate();
         h.tvDate.setText(date != null && date.length() > 24 ? date.substring(0, 24) : date);
 
-        // Color por tipo
+
         int color;
         switch (p.getFuelType()) {
             case "EXTRA":     color = 0xFFFF8F00; break;

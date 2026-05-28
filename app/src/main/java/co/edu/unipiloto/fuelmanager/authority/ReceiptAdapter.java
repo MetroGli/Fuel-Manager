@@ -19,20 +19,17 @@ import co.edu.unipiloto.fuelmanager.data.model.Receipt;
 
 public class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.VH> {
 
-    // NUEVO — listener para que ReceiptHistoryActivity abra el PDF del recibo
     public interface OnPdfClick { void onPdf(Receipt receipt); }
 
     private final List<Receipt>  items;
-    private final OnPdfClick     pdfListener;  // puede ser null (modo legacy sin PDF)
+    private final OnPdfClick     pdfListener;
     private static final NumberFormat COP = NumberFormat.getInstance(new Locale("es", "CO"));
 
-    /** Constructor con listener de PDF (usado por ReceiptHistoryActivity). */
     public ReceiptAdapter(List<Receipt> items, OnPdfClick pdfListener) {
         this.items       = items;
         this.pdfListener = pdfListener;
     }
 
-    /** Constructor sin listener (compatibilidad hacia atrás si algo lo usaba así). */
     public ReceiptAdapter(List<Receipt> items) {
         this(items, null);
     }
@@ -72,7 +69,6 @@ public class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.VH> {
         }
         h.tvFuel.setTextColor(color);
 
-        // NUEVO — botón PDF visible solo cuando hay listener
         if (h.btnPdf != null) {
             if (pdfListener != null) {
                 h.btnPdf.setVisibility(View.VISIBLE);
@@ -91,7 +87,7 @@ public class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.VH> {
 
     static class VH extends RecyclerView.ViewHolder {
         TextView       tvReceiptId, tvFuel, tvVolume, tvTotal, tvPlate, tvDate;
-        MaterialButton btnPdf; // NUEVO — puede ser null si el layout no lo tiene aún
+        MaterialButton btnPdf;
 
         VH(View v) {
             super(v);
@@ -101,7 +97,7 @@ public class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.VH> {
             tvTotal     = v.findViewById(R.id.tvReceiptTotal);
             tvPlate     = v.findViewById(R.id.tvReceiptPlate);
             tvDate      = v.findViewById(R.id.tvReceiptDate);
-            btnPdf      = v.findViewById(R.id.btnGeneratePdf); // NUEVO id en item_receipt.xml
+            btnPdf      = v.findViewById(R.id.btnGeneratePdf);
         }
     }
 }

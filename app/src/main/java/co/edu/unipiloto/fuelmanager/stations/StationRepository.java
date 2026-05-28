@@ -10,7 +10,6 @@ import co.edu.unipiloto.fuelmanager.utils.ApiClient;
 public class StationRepository {
 
     public StationRepository(Context context) {
-        // Context ya no es necesario
     }
 
     public List<Station> getStationsSortedByPrice(String zone) {
@@ -22,7 +21,7 @@ public class StationRepository {
     }
 
     public List<Station> getAllOrderedByPrice() {
-        // El backend devuelve todas las estaciones; el orden por precio se hace aquí
+
         List<Station> list = ApiClient.getAllStations();
         list.sort((a, b) -> Double.compare(a.getPriceCorriente(), b.getPriceCorriente()));
         return list;

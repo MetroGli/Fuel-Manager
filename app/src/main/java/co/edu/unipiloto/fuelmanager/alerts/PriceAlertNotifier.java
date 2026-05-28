@@ -50,7 +50,7 @@ public class PriceAlertNotifier {
 
             if (currentPrice != alert.getLastKnownPrice()) {
                 alert.setLastKnownPrice(currentPrice);
-                ApiClient.upsertAlert(alert); // actualizar precio guardado
+                ApiClient.upsertAlert(alert);
                 changed.add(alert);
             }
         }

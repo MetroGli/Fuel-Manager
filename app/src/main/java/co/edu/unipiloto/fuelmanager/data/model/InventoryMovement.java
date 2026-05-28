@@ -10,12 +10,12 @@ public class InventoryMovement {
     public static final String FUEL_ACPM      = "ACPM";
 
     private int    id;
-    private String fuelType;    // Corriente / Extra / ACPM
-    private String movType;     // ENTRADA / SALIDA
-    private double volumeGal;   // Galones
-    private String note;        // Observación opcional
-    private String date;        // Fecha del movimiento
-    private int    stationId;   // FK a la estación
+    private String fuelType;
+    private String movType;
+    private double volumeGal;
+    private String note;
+    private String date;
+    private int    stationId;
 
     public InventoryMovement() {}
 

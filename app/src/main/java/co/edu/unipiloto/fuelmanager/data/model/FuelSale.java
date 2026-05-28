@@ -3,13 +3,13 @@ package co.edu.unipiloto.fuelmanager.data.model;
 public class FuelSale {
 
     private int    id;
-    private String fuelType;       // Corriente / Extra / ACPM
-    private double volumeGal;      // Galones vendidos
-    private double pricePerGal;    // Precio por galón al momento de la venta
-    private double totalPrice;     // volumeGal * pricePerGal
-    private String clientPlate;    // Placa del vehículo (opcional)
-    private String date;           // Fecha de la venta
-    private int    stationId;      // FK a la estación
+    private String fuelType;
+    private double volumeGal;
+    private double pricePerGal;
+    private double totalPrice;
+    private String clientPlate;
+    private String date;
+    private int    stationId;
 
     public FuelSale() {}
 

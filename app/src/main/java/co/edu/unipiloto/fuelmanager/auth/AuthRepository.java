@@ -8,7 +8,6 @@ import co.edu.unipiloto.fuelmanager.utils.ApiClient;
 public class AuthRepository {
 
     public AuthRepository(Context context) {
-        // Context ya no es necesario, ApiClient es estático
     }
 
     public enum LoginResult { SUCCESS, INVALID_CREDENTIALS }

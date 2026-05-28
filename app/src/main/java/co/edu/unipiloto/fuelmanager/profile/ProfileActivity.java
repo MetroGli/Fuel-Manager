@@ -89,7 +89,7 @@ public class ProfileActivity extends AppCompatActivity {
         }).start();
     }
 
-    /* ── Helpers ─────────────────────────────────────────── */
+
     private String getRoleLabel(String role) {
         if (role == null) return "Usuario";
         switch (role) {

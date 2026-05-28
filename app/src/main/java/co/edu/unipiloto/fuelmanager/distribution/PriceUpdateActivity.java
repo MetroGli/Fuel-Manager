@@ -137,7 +137,7 @@ public class PriceUpdateActivity extends AppCompatActivity {
         }
 
         new Thread(() -> {
-            // Guardar historial del cambio
+
             PriceUpdate pu = new PriceUpdate(
                     selectedStation.getId(),
                     selectedStation.getName(),
@@ -147,7 +147,7 @@ public class PriceUpdateActivity extends AppCompatActivity {
                     new Date().toString(),
                     session.getUserId()
             );
-            // PriceUpdate no tiene endpoint propio — se guarda actualizando la estación
+
             boolean ok = ApiClient.updateStationPrices(
                     selectedStation.getId(), newCor, newExt, newAcp);
 

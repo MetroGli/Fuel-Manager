@@ -14,7 +14,6 @@ import co.edu.unipiloto.fuelmanager.utils.ApiClient;
 public class InventoryRepository {
 
     public InventoryRepository(Context context) {
-        // Context ya no es necesario, ApiClient es estático
     }
 
     public long insertMovement(InventoryMovement mov) {
